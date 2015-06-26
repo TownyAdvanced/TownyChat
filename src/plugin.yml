@@ -41,6 +41,9 @@ commands:
         description: Unmutes a player in a channel
         usage: /<command> channel player
         permission: townychat.mod.unmute
+    chanlist:
+        aliases: []
+        usage: /<command> [player name|none]
             
 ############################################################
 # +------------------------------------------------------+ #

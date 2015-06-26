@@ -43,6 +43,10 @@ public class ChannelCommand implements CommandExecutor {
 		if (args[0].equalsIgnoreCase("mutelist")) {
 			return plugin.getCommand("mutelist").getExecutor().onCommand(sender, cmd, label, args); 
 		}
+		
+		if (args[0].equalsIgnoreCase("chanlist")) {
+			return plugin.getCommand("chanlist").getExecutor().onCommand(sender, cmd, label, args); 
+		}
 
 		return false;
 	}
