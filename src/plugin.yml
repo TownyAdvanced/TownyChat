@@ -43,7 +43,8 @@ commands:
         permission: townychat.mod.unmute
     chanlist:
         aliases: []
-        usage: /<command> [player name|none]
+        description: Lists channels you're in
+        usage: /<command>
             
 ############################################################
 # +------------------------------------------------------+ #
