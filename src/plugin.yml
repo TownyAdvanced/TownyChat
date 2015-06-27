@@ -21,7 +21,7 @@ commands:
     channel:
         aliases: [ch]
         description: Channel leaving and joining
-        usage: /<command> leave|join channel
+        usage: /<command> join|leave|list channel
     leave:
         description: Leaves a channel
         usage: /<command> channel

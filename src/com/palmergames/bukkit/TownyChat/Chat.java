@@ -10,6 +10,7 @@ import org.dynmap.DynmapAPI;
 
 import com.ensifera.animosity.craftirc.CraftIRC;
 import com.palmergames.bukkit.TownyChat.CraftIRCHandler;
+import com.palmergames.bukkit.TownyChat.Command.ChanListCommand;
 import com.palmergames.bukkit.TownyChat.Command.ChannelCommand;
 import com.palmergames.bukkit.TownyChat.Command.JoinCommand;
 import com.palmergames.bukkit.TownyChat.Command.LeaveCommand;
@@ -80,6 +81,7 @@ public class Chat extends JavaPlugin {
 		getCommand("chmute").setExecutor(new MuteCommand(this));
 		getCommand("chunmute").setExecutor(new UnmuteCommand(this));
 		getCommand("mutelist").setExecutor(new MuteListCommand(this));
+		getCommand("chanlist").setExecutor(new ChanListCommand(this));
 	}
 	
 	private boolean load() {
