@@ -6,6 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /*
@@ -30,12 +31,14 @@ public class AsyncChatHookEvent extends Event {
 	protected AsyncPlayerChatEvent event;
 	protected boolean changed;
 	protected Channel channel;
+	protected Set<Player> recipients;
 
 	public AsyncChatHookEvent(AsyncPlayerChatEvent event, Channel channel, boolean async) {
 		super(async);
 		this.event = event;
 		this.changed = false;
 		this.channel = channel;
+		this.recipients = new HashSet<>(event.getRecipients());
 	}
 
 	public Channel getChannel() {
@@ -69,7 +72,7 @@ public class AsyncChatHookEvent extends Event {
 	}
 	
 	public Set<Player> getRecipients() {
-		return event.getRecipients();
+		return this.recipients;
 	}
 	
 	public boolean isCancelled() {
@@ -82,8 +85,8 @@ public class AsyncChatHookEvent extends Event {
 	
 	public void setRecipients(Set<Player> recipients) {
 		changed = true;
-		event.getRecipients().clear();
-		event.getRecipients().addAll(recipients);
+		this.recipients.clear();
+		this.recipients.addAll(recipients);
 	}
 	
 	public void setFormat(String format) {
