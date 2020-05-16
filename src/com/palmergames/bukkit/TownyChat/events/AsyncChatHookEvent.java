@@ -96,7 +96,7 @@ public class AsyncChatHookEvent extends Event {
 	
 	public void setMessage(String message) {
 		changed = true;
-		event.setFormat(message);
+		event.setMessage(message);
 	}
 	
 	public void setCancelled(boolean cancel) {
