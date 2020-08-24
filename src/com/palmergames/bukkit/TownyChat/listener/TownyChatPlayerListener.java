@@ -1,37 +1,34 @@
 package com.palmergames.bukkit.TownyChat.listener;
 
-import java.util.WeakHashMap;
-
+import com.palmergames.bukkit.TownyChat.Chat;
+import com.palmergames.bukkit.TownyChat.HexFormatter;
+import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
+import com.palmergames.bukkit.TownyChat.channels.Channel;
+import com.palmergames.bukkit.TownyChat.channels.channelTypes;
+import com.palmergames.bukkit.TownyChat.config.ChatSettings;
+import com.palmergames.bukkit.TownyChat.tasks.onPlayerJoinTask;
+import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.TownyMessaging;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Translation;
+import com.palmergames.bukkit.towny.TownyUniverse;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.palmergames.bukkit.towny.TownyMessaging;
-import com.palmergames.bukkit.TownyChat.channels.Channel;
-import com.palmergames.bukkit.TownyChat.channels.channelTypes;
-import com.palmergames.bukkit.TownyChat.config.ChatSettings;
-import com.palmergames.bukkit.TownyChat.listener.LocalTownyChatEvent;
-import com.palmergames.bukkit.TownyChat.tasks.onPlayerJoinTask;
-import com.palmergames.bukkit.TownyChat.util.TownyUtil;
-import com.palmergames.bukkit.TownyChat.Chat;
-import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
-import com.palmergames.bukkit.towny.exceptions.TownyException;
-import com.palmergames.bukkit.towny.object.Resident;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-import com.palmergames.bukkit.util.Colors;
-import com.palmergames.util.StringMgmt;
+import java.util.WeakHashMap;
 
 public class TownyChatPlayerListener implements Listener  {
 	private Chat plugin;
 	
-	private WeakHashMap<Player, Long> SpamTime = new WeakHashMap<Player, Long>();
-	private WeakHashMap<Player, String> directedChat = new WeakHashMap<Player, String>();
+	public WeakHashMap<Player, String> directedChat = new WeakHashMap<>();
 
 	public TownyChatPlayerListener(Chat instance) {
 		this.plugin = instance;
@@ -68,105 +65,55 @@ public class TownyChatPlayerListener implements Listener  {
 			channel.forgetPlayer(name);
 		}
 	}
-
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		
-		final Player player = event.getPlayer();
-
-		// Test if this player is registered with Towny.
-		try {
-			TownyUniverse.getDataSource().getResident(player.getName());
-		} catch (NotRegisteredException e) {
-			return;
-		}
-		String split[] = event.getMessage().split("\\ ");
-		String command = split[0].trim().toLowerCase().replace("/", "");
-		String message = "";
-
-		if (split.length > 1)
-			message = StringMgmt.join(StringMgmt.remFirstArg(split), " ");
-
-		// Check if they used a channel command or alias
-		Channel channel = plugin.getChannelsHandler().getChannel(player, command);
-		if (channel != null) {
-			/*
-			 *  If there is no message toggle the chat mode.
-			 */
-			if (message.isEmpty()) {
-				if (plugin.getTowny().hasPlayerMode(player, channel.getName())) {
-					// Find what the next channel is if any
-					Channel nextChannel = null;
-					if (plugin.getChannelsHandler().getDefaultChannel() != null && plugin.getChannelsHandler().getDefaultChannel().isPresent(player.getName())) {
-						nextChannel = plugin.getChannelsHandler().getDefaultChannel();
-						if (!nextChannel.getName().equalsIgnoreCase(channel.getName())) {
-							TownyUtil.removeAndSetPlayerMode(plugin.getTowny(), player, channel.getName(), nextChannel.getName(), true);
-						} else {
-							// They're talking on default channel and want to leave but can't because they'll be put default again
-							// Their only option out is to leave the channel if they have permission to do so.
-							TownyMessaging.sendErrorMsg(player, "[TownyChat] You are already talking in the default channel. To switch to another channel use that channel's command.");
-						}
-					} else {
-						plugin.getTowny().removePlayerMode(player);
-					}
-					
-					if (nextChannel == null) {
-						nextChannel = plugin.getChannelsHandler().getActiveChannel(player, channelTypes.GLOBAL);
-					}
-					
-					// If the new channel is not us, announce it
-					if (nextChannel != null && !channel.getName().equalsIgnoreCase(nextChannel.getName())) {
-						TownyMessaging.sendMsg(player, "[TownyChat] You are now talking in " + Colors.White + nextChannel.getName());
-					}
-				}
-				else {
-					plugin.getTowny().setPlayerMode(player, new String[]{channel.getName()}, true);
-					TownyMessaging.sendMsg(player, "[TownyChat] You are now talking in " + Colors.White + channel.getName());
-				}
-			} else {
-				// Notify player he is muted
-				if (channel.isMuted(player.getName())) {
-					TownyMessaging.sendErrorMsg(player, "You are currently muted in " + channel.getName() + "!");
-					event.setCancelled(true);
-					return;
-				}
-				
-				/*
-				 * Flag this as directed chat and trigger a player chat event
-				 */
-				event.setMessage(message);
-				
-				directedChat.put(player, command);
-				
-				final String msg = message;
-				
-				// Fire this Async so we match other incoming chat.
-				plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-
-					@Override
-					public void run() {
-
-						player.chat(msg);
-						
-					}});
-			}
-			
-			event.setCancelled(true);
-		}
-	}
 	
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
+		if (event.isCancelled()) return;
 		
 		Player player = event.getPlayer();
 		
+		if (event.getMessage().contains("&L") || event.getMessage().contains("&l") ||
+			event.getMessage().contains("&O") || event.getMessage().contains("&o") ||
+			event.getMessage().contains("&N") || event.getMessage().contains("&n") ||
+			event.getMessage().contains("&K") || event.getMessage().contains("&k") ||
+			event.getMessage().contains("&M") || event.getMessage().contains("&m") ||
+			event.getMessage().contains("&R") || event.getMessage().contains("&r") ) {			
+			if (!player.hasPermission("townychat.chat.format.bold")) {			
+				event.setMessage(event.getMessage().replaceAll("&L", ""));
+				event.setMessage(event.getMessage().replaceAll("&l", ""));
+			}
+			if (!player.hasPermission("townychat.chat.format.italic")) {			
+				event.setMessage(event.getMessage().replaceAll("&O", ""));
+				event.setMessage(event.getMessage().replaceAll("&o", ""));
+			}
+			if (!player.hasPermission("townychat.chat.format.magic")) {			
+				event.setMessage(event.getMessage().replaceAll("&K", ""));
+				event.setMessage(event.getMessage().replaceAll("&k", ""));
+			}
+			if (!player.hasPermission("townychat.chat.format.underlined")) {			
+				event.setMessage(event.getMessage().replaceAll("&N", ""));
+				event.setMessage(event.getMessage().replaceAll("&n", ""));
+			}
+			if (!player.hasPermission("townychat.chat.format.strike")) {			
+				event.setMessage(event.getMessage().replaceAll("&M", ""));
+				event.setMessage(event.getMessage().replaceAll("&m", ""));
+			}
+			if (!player.hasPermission("townychat.chat.format.reset")) {			
+				event.setMessage(event.getMessage().replaceAll("&R", ""));
+				event.setMessage(event.getMessage().replaceAll("&r", ""));
+			}
+		}
+		
+		if(player.hasPermission("townychat.chat.color")) {
+			event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
+
+			if (Towny.is116Plus()) {
+				event.setMessage(HexFormatter.translateHexColors(event.getMessage()));
+			}
+		}
+		
 		// Check if essentials has this player muted.
 		if (!isMuted(player)) {
-
-			if (isSpam(player)) {
-				event.setCancelled(true);
-				return;
-			}
 
 			/*
 			 * If this was directed chat send it via the relevant channel
@@ -178,12 +125,14 @@ public class TownyChatPlayerListener implements Listener  {
 				if (channel != null) {
 					// Notify player he is muted
 					if (channel.isMuted(player.getName())) {
-						TownyMessaging.sendErrorMsg(player, "You are currently muted in " + Colors.White + channel.getName() + Colors.Rose + "!");
+						TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
 						event.setCancelled(true);
 						return;
 					}
-
-					plugin.getLogger().info("onPlayerChat: Processing directed message for " + channel.getName());
+					if (channel.isSpam(player)) {
+						event.setCancelled(true);
+						return;
+					}
 					channel.chatProcess(event);
 					return;
 				}
@@ -196,7 +145,11 @@ public class TownyChatPlayerListener implements Listener  {
 				if (plugin.getTowny().hasPlayerMode(player, channel.getName())) {
 					// Notify player he is muted
 					if (channel.isMuted(player.getName())) {
-						TownyMessaging.sendErrorMsg(player, "You are currently muted in " + Colors.White + channel.getName() + Colors.Rose + "!");
+						TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
+						event.setCancelled(true);
+						return;
+					}
+					if (channel.isSpam(player)) {
 						event.setCancelled(true);
 						return;
 					}
@@ -215,11 +168,14 @@ public class TownyChatPlayerListener implements Listener  {
 			if (channel != null) {
 				// Notify player he is muted
 				if (channel.isMuted(player.getName())) {
-					TownyMessaging.sendErrorMsg(player, "You are currently muted in " + Colors.White + channel.getName() + Colors.Rose + "!");
+					TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
 					event.setCancelled(true);
 					return;
 				}
-
+				if (channel.isSpam(player)) {
+					event.setCancelled(true);
+					return;
+				}
 				channel.chatProcess(event);
 				return;
 			}
@@ -231,10 +187,16 @@ public class TownyChatPlayerListener implements Listener  {
 		if (ChatSettings.isModify_chat()) {
 			try {
 				event.setFormat(ChatSettings.getRelevantFormatGroup(player).getGLOBAL().replace("{channelTag}", "").replace("{msgcolour}", ""));
-				Resident resident = TownyUniverse.getDataSource().getResident(player.getName());
+				Resident resident = TownyUniverse.getInstance().getDataSource().getResident(player.getName());
 
 				LocalTownyChatEvent chatEvent = new LocalTownyChatEvent(event, resident);
-				event.setFormat(TownyChatFormatter.getChatFormat(chatEvent));
+
+				if (Towny.is116Plus()) {
+					event.setFormat(HexFormatter.translateHexColors(TownyChatFormatter.getChatFormat(chatEvent)));
+				} else {
+					event.setFormat(TownyChatFormatter.getChatFormat(chatEvent));
+				}
+
 			} catch (NotRegisteredException e) {
 				// World or resident not registered with Towny
 				e.printStackTrace();
@@ -253,43 +215,13 @@ public class TownyChatPlayerListener implements Listener  {
 		if (plugin.getTowny().isEssentials()) {
 			try {
 				if (plugin.getTowny().getEssentials().getUser(player).isMuted()) {
-					TownyMessaging.sendErrorMsg(player, "Unable to talk...You are currently muted!");
+					TownyMessaging.sendErrorMsg(player, Translation.of("tc_err_unable_to_talk_essentials_mute"));
 					return true;
 				}
 			} catch (TownyException e) {
 				// Get essentials failed
 			}
 			return false;
-		}
-		return false;
-	}
-	
-	
-	/**
-	 * Test if this player is spamming chat.
-	 * One message every 2 seconds limit
-	 * 
-	 * @param player
-	 * @return
-	 */
-	private boolean isSpam(Player player) {
-		
-		long timeNow = System.currentTimeMillis();
-		long spam = timeNow;
-		
-		if (SpamTime.containsKey(player)) {
-			spam = SpamTime.get(player);
-			SpamTime.remove(player);
-		} else {
-			// No record found so ensure we don't trigger for spam
-			spam -= ((ChatSettings.getSpam_time() + 1)*1000);
-		}
-		
-		SpamTime.put(player, timeNow);
-		
-		if (timeNow - spam < (ChatSettings.getSpam_time()*1000)) {
-			TownyMessaging.sendErrorMsg(player, "Unable to talk...You are spamming!");
-			return true;
 		}
 		return false;
 	}

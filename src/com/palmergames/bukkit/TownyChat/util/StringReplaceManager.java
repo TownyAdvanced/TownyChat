@@ -46,7 +46,7 @@ public class StringReplaceManager<E> {
 					matcher.appendReplacement(sb, replacer.toString());
 				} else {
 					try {
-						String replacement = ((ReplacerCallable<E>)replacer).call(match, e);
+						String replacement = Matcher.quoteReplacement(((ReplacerCallable<E>)replacer).call(match, e));
 						matcher.appendReplacement(sb, replacement);
 					} catch (Exception exception) {
 						continue;

@@ -2,20 +2,27 @@ package com.palmergames.bukkit.TownyChat.channels;
 
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import com.palmergames.bukkit.towny.TownyMessaging;
+import com.palmergames.bukkit.towny.object.Translation;
 
 public abstract class Channel {
 	
 	private String name;
 	private List<String> commands;
 	private channelTypes type;
-	private String channelTag, messageColour, permission, leavePermission, craftIRCTag;
+	private String channelTag, messageColour, permission, leavePermission;
 	private double range;
 	private boolean hooked=false;
 	private boolean autojoin=true;
+	private double spamtime;
+	private WeakHashMap<Player, Long> Spammers = new WeakHashMap<>();
 	protected ConcurrentMap<String, Integer> absentPlayers = null;  
 	protected ConcurrentMap<String, Integer> mutedPlayers = null;
 	
@@ -92,21 +99,6 @@ public abstract class Channel {
 	 */
 	public void setPermission(String permission) {
 		this.permission = permission;
-	}
-	/**
-	 * @return the permission
-	 */
-	public String getCraftIRCTag() {
-		if ((craftIRCTag == null) || (craftIRCTag.isEmpty()))
-			return "admin";
-			
-		return craftIRCTag;
-	}
-	/**
-	 * @param craftIRCTag the CraftIRC channel Tag to set
-	 */
-	public void setCraftIRCTag(String craftIRCTag) {
-		this.craftIRCTag = craftIRCTag;
 	}
 	/**
 	 * @return the range
@@ -218,7 +210,7 @@ public abstract class Channel {
 	 * Set name of permissions node to leave a the channel 
 	 */
 	public void setLeavePermission(String permission) {
-		leavePermission = permission;;
+		leavePermission = permission;
 	}
 
 	public boolean hasMuteList() {
@@ -245,4 +237,43 @@ public abstract class Channel {
 	public boolean isAutoJoin() {
 		return autojoin;
 	}
+
+	public double getSpam_time() {
+		return spamtime;
+	}
+
+	public void setSpam_time(double spamtime) {
+		this.spamtime = spamtime;
+	}
+	
+	/**
+	 * Test if this player is spamming chat.
+	 * One message every 2 seconds limit
+	 * 
+	 * @param player
+	 * @return
+	 */
+	public boolean isSpam(Player player) {
+		if (!player.hasPermission("townychat.spam.bypass"))
+			return false;
+		long timeNow = System.currentTimeMillis();
+		long spam = timeNow;
+		
+		if (Spammers.containsKey(player)) {
+			spam = Spammers.get(player);
+			Spammers.remove(player);
+		} else {
+			// No record found so ensure we don't trigger for spam
+			spam -= ((getSpam_time() + 1)*1000);
+		}
+		
+		Spammers.put(player, timeNow);
+		
+		if (timeNow - spam < (getSpam_time()*1000)) {
+			TownyMessaging.sendErrorMsg(player, Translation.of("tc_err_unable_to_talk_you_are_spamming"));
+			return true;
+		}
+		return false;
+	}
+	
 }

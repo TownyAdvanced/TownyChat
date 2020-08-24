@@ -1,0 +1,94 @@
+# This file contains all configuration data for channels
+# The formating for them remains in the Towny Config and world files
+# so they can still be used on a per world basis.
+
+# In order to swap channels, you must use the desired channel's command 
+#          to enter the new chat and leave the old one.
+# eg. /tc (would put you in town chat) and typing it again would not change 
+#          you channel. To get back to general chat, you can do /g. 
+
+# The channel type is either GLOBAL, TOWN, NATION or DEFAULT.
+#  These specify what chat formating section they will use
+#  and where the chat will go
+# (town goes to all town residents, depending on the range setting)
+
+# channeltag is applied if the chat format for that channel has the {channelTag}
+
+# messagecolour sets the colour of the message when sent.
+
+# range is a setting which allows greater control over each channel.
+# this will set the maximum distance between players who can hear the message.
+# range is in blocks (if set to a limit).
+#
+#     -1 = no limits
+#	  0 = same world only
+#	  any positive value = limited range in the same world.
+
+# Text colouring
+# --------------
+# Black = &0, Navy = &1, Green = &2, Blue = &3, Red = &4
+# Purple = &5, Gold = &6, LightGray = &7, Gray = &8
+# DarkPurple = &9, LightGreen = &a, LightBlue = &b
+# Rose = &c, LightPurple = &d, Yellow = &e, White = &f
+
+Channels:
+    general:
+        commands: [g]
+        type: GLOBAL
+        channeltag: '&f[g]'
+        messagecolour: '&f'
+        permission: 'towny.chat.general'
+        default: true
+        range: '-1'
+        spam_time: '0.5'
+        
+    town:
+        commands: [tc]
+        type: TOWN
+        channeltag: '&f[&3TC&f]'
+        messagecolour: '&b'
+        permission: 'towny.chat.town'
+        range: '-1'
+        spam_time: '0.5'
+         
+    nation:
+        commands: [nc]
+        type: NATION
+        channeltag: '&f[&6NC&f]'
+        messagecolour: '&e'
+        permission: 'towny.chat.nation'
+        range: '-1'
+        spam_time: '0.5'
+
+    alliance:
+        commands: [ac]
+        type: ALLIANCE
+        channeltag: '&f[&2AC&f]'
+        messagecolour: '&a'
+        permission: 'towny.chat.alliance'
+        range: '-1'
+        spam_time: '0.5'
+
+    admin:
+        commands: [a,admin]
+        type: DEFAULT
+        channeltag: '&f[&4ADMIN&f]'
+        messagecolour: '&c'
+        permission: 'towny.chat.admin'
+        range: '-1'
+        
+    mod:
+        commands: [m,mod]
+        type: DEFAULT
+        channeltag: '&f[&9MOD&f]'
+        messagecolour: '&5'
+        permission: 'towny.chat.mod'
+        range: '-1'
+        
+    local:
+        commands: [l,lc]
+        type: GLOBAL
+        channeltag: '&f[local]'
+        messagecolour: '&f'
+        permission: 'towny.chat.local'
+        range: '100'

@@ -1,14 +1,14 @@
 package com.palmergames.bukkit.TownyChat.channels;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import com.palmergames.bukkit.TownyChat.Chat;
+import com.palmergames.bukkit.towny.TownyUniverse;
 import org.bukkit.entity.Player;
 
-import com.palmergames.bukkit.TownyChat.Chat;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author ElgarL
@@ -16,6 +16,7 @@ import com.palmergames.bukkit.towny.object.TownyUniverse;
  */
 public class ChannelsHolder {
 	
+	@SuppressWarnings("unused")
 	private Chat plugin;
 	private Channel defaultChan = null;
 	
@@ -37,7 +38,7 @@ public class ChannelsHolder {
 	}
 	
 	// Container for all channels
-	private Map<String,Channel> channels = new HashMap<String,Channel>();
+	private Map<String,Channel> channels = new LinkedHashMap<>();
 
 	/**
 	 * @return the channels
@@ -53,6 +54,7 @@ public class ChannelsHolder {
 		this.channels = channels;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public void addChannel(Channel chan) {
 		if (isChannel(chan.getName()))
 			channels.remove(chan);
@@ -80,11 +82,8 @@ public class ChannelsHolder {
 		
 		for (Channel channel: channels.values()) {
 			if (channel.getCommands().contains(command.toLowerCase())) {
-				if (!plugin.getTowny().isPermissions()
-					|| (plugin.getTowny().isPermissions() && ((TownyUniverse.getPermissionSource().has(player, channel.getPermission()))
-														|| (channel.getPermission().isEmpty()))))
-					return channel;
-				
+				if (TownyUniverse.getInstance().getPermissionSource().has(player, channel.getPermission()) || (channel.getPermission().isEmpty())) 
+					return channel;				
 			}
 		}
 		return null;
@@ -109,9 +108,7 @@ public class ChannelsHolder {
 		for (Channel channel: channels.values()) {
 			if (!channel.isPresent(name)) continue;
 			if (!channel.getType().equals(type)) continue;
-			if (!plugin.getTowny().isPermissions() || 
-				(plugin.getTowny().isPermissions() && ((TownyUniverse.getPermissionSource().has(player, channel.getPermission())) || 
-						                               (channel.getPermission().isEmpty())))) {
+			if (TownyUniverse.getInstance().getPermissionSource().has(player, channel.getPermission()) || (channel.getPermission().isEmpty())) {
 				if (channel.getRange() == -1) {
 					global = channel;
 				} else if (channel.getRange() == 0) {
@@ -149,9 +146,7 @@ public class ChannelsHolder {
 		
 		for (Channel channel: channels.values()) {
 			if (!channel.getType().equals(type)) continue;
-			if (!plugin.getTowny().isPermissions() || 
-					(plugin.getTowny().isPermissions() && ((TownyUniverse.getPermissionSource().has(player, channel.getPermission())) || 
-							                               (channel.getPermission().isEmpty())))) {
+			if (TownyUniverse.getInstance().getPermissionSource().has(player, channel.getPermission()) || (channel.getPermission().isEmpty())){
 				if (channel.getRange() == -1) {
 					global = channel;
 				} else if (channel.getRange() == 0) {

@@ -1,11 +1,10 @@
 package com.palmergames.bukkit.TownyChat.util;
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.palmergames.bukkit.towny.Towny;
 import org.bukkit.entity.Player;
 
-import com.palmergames.bukkit.towny.Towny;
+import java.util.Iterator;
+import java.util.List;
 
 public class TownyUtil {
 
@@ -31,18 +30,7 @@ public class TownyUtil {
 		return false;
 	}
 
-	public static boolean addPlayerMode(Towny towny, Player player, String mode, boolean notify) {
-		if (towny.hasPlayerMode(player, mode)) {
-			return false;
-		}
-		
-		List<String> modes = towny.getPlayerMode(player);
-		modes.add(mode);
-		towny.setPlayerMode(player, modes.toArray(new String[modes.size()]), notify);
-		return true;
-	}
-
-	public static boolean removeAndSetPlayerMode(Towny towny, Player player, String removeMode, String addMode, boolean notify) {
+	public static void removeAndSetPlayerMode(Towny towny, Player player, String removeMode, String addMode, boolean notify) {
 		List<String> modes = towny.getPlayerMode(player);
 		boolean modesChanged = false;
 		if (removeMode != null && towny.hasPlayerMode(player, removeMode)) {
@@ -61,9 +49,7 @@ public class TownyUtil {
 			modesChanged = true;
 		}
 		if (modesChanged) {
-			towny.setPlayerMode(player, modes.toArray(new String[modes.size()]), notify);
-			return true;
+			towny.setPlayerMode(player, modes.toArray(new String[0]), notify);
 		}
-		return false;
 	}
 }

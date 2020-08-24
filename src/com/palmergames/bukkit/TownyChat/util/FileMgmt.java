@@ -13,12 +13,10 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import com.palmergames.bukkit.TownyChat.Chat;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.reader.UnicodeReader;
-
-import com.palmergames.bukkit.TownyChat.Chat;
-
 
 
 public class FileMgmt {
@@ -32,6 +30,37 @@ public class FileMgmt {
 	}
 
 	@SuppressWarnings("unchecked")
+	public static Map<String, Object> getFile(String filepath) {
+
+		try {
+			File f = new File(filepath);
+			
+			Yaml yamlChannels = new Yaml(new SafeConstructor());
+			Object channelsRootDataNode;
+
+			FileInputStream fileInputStream = new FileInputStream(f);
+			try {
+				channelsRootDataNode = yamlChannels.load(new UnicodeReader(fileInputStream));
+				if (channelsRootDataNode == null) {
+					throw new NullPointerException();
+				}
+			} catch (Exception ex) {
+				throw new IllegalArgumentException("The following file couldn't pass on Parser.\n" + f.getPath(), ex);
+			} finally {
+				fileInputStream.close();
+			}
+
+			if (channelsRootDataNode instanceof Map)
+				return (Map<String, Object>) channelsRootDataNode;
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getFile(String filepath, String resource, Chat plugin) {
 
 		try {
@@ -41,8 +70,6 @@ public class FileMgmt {
 				try {
 					String resString = convertStreamToString("/" + resource);
 					// If we have a plugin reference pass to load default.
-					if (plugin != null)
-						resString = plugin.getConfigurationHandler().setConfigs(resString, true);
 					
 					FileMgmt.stringToFile(resString, filepath);
 
@@ -74,7 +101,6 @@ public class FileMgmt {
 				return (Map<String, Object>) channelsRootDataNode;
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -132,6 +158,18 @@ public class FileMgmt {
 		return false;
 
 	}
+	
+	public static File CheckYMLExists(File file) {
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return file;
+	}
 
 	/**
 	 * Writes the contents of a string to a file.
@@ -149,9 +187,6 @@ public class FileMgmt {
 
 			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
 
-			// BufferedWriter out = new BufferedWriter(new
-			// FileWriter(FileName));
-
 			source.replaceAll("\n", System.getProperty("line.separator"));
 
 			out.write(source);
@@ -166,5 +201,42 @@ public class FileMgmt {
 
 	public static String fileSeparator() {
 		return System.getProperty("file.separator");
+	}
+	
+	/**
+	 * Pass a file and it will return it's contents as a string.
+	 * 
+	 * @param file File to read.
+	 * @return Contents of file. String will be empty in case of any errors.
+	 */
+	public static String convertFileToString(File file) {
+
+		if (file != null && file.exists() && file.canRead() && !file.isDirectory()) {
+			Writer writer = new StringWriter();
+			InputStream is = null;
+
+			char[] buffer = new char[1024];
+			try {
+				is = new FileInputStream(file);
+				Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);					
+				}
+				reader.close();
+			} catch (IOException e) {
+				System.out.println("Exception ");
+			} finally {
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException ignore) {
+					}
+				}
+			}
+			return writer.toString();
+		} else {
+			return "";
+		}
 	}
 }

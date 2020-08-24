@@ -27,7 +27,7 @@ public class onLoadedTask implements Runnable {
 			// Setup our config here as we now have Towny loaded.
 			if (this.towny.isError() || (!plugin.getConfigurationHandler().loadConfig(plugin.getChannelsPath(), "ChatConfig.yml"))) {
 				
-				plugin.getLogger().severe("disabling TownyChat");
+				plugin.getLogger().severe("Disabling TownyChat...");
 				plugin.getServer().getPluginManager().disablePlugin(plugin);
 				return;
 			}

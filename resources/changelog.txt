@@ -1,0 +1,331 @@
+v0.1:
+	- Initial release
+v0.2:
+	- Fixed players entering regex fields in chat crashing {msg}.
+	- changed PLAYER_CHAT event to run earlier so we triger before other chat plugins.
+	  If players are using chat modes we need to run first to cancel the chat event for other plugins.
+v0.3:
+	- TownyChat now only enables itself if Towny successfully starts.
+	- Fixed missing {} around modplayername.
+v0.4:
+	- Fixed custom channel chat not showing in the console.
+v0.5:
+	- Added auto modes for chat.
+	  Type '/tc' to set town chat mode. All text typed from then on will be sent to town chat.
+	  While in a chat mode you can still talk in other channels by using the channel commands eg. '/nc hi'.
+	  While in a chat mode you can talk in global chat with '/g text here'.
+	  to clear all chat modes '/g'.
+	- Added a new permission node for global chat ('/g') of 'towny.chat.global'.
+	- Added {worldname} as an accepted entry.
+	- Fixed '/g' mode to add formatting.
+v0.6:
+	- Changed global chat to pass through bukkits chat process instead of our own (allows other plugins to see it again).
+v0.7:
+	- Added support for Essentials mute and ignore features. Players on ignore will still be seen in town and nation chat.
+	- Added craftIRC 3.1 support
+	
+	  Add a channel tag of 'admin' to the
+	  receiving channel in the craftIRC config.
+	  
+	  Disable Auto paths and add the following to the 'paths:' section
+
+	    - source: 'minecraft'
+	      target: 'admin'
+	      formatting:
+	        chat: '%message%'
+	        
+	    - source: 'admin'     # These are endpoint tags
+	      target: 'minecraft'    #
+	      formatting:
+	        chat: '%foreground%[%red%%ircPrefix%%sender%%foreground%] %message%'
+v0.8:
+	- Fixed {townformatted} and {nationformatted} to display correctly.
+	- Updated to use new per world channel formats.
+v0.9:
+	- TownyChat now passes player chat to Dynmap.
+v0.10:
+	- Code rewrite for new code locations in Towny.
+	- Added a spam filter so players can only send one message every two seconds.
+	- Added the ability to restrict channel ranges.
+	
+	  All custom channels (not town or nation) can now have an extra value
+	  appended to signify a range limit on chat.
+	  
+	  -1 = no limits
+	   0 = same world only
+	  any positive value = limited range (blocks) in the same world.
+	  
+	  eg. - /g,,,towny.chat.global,-1
+	        or a local channel that covers 100 blocks range
+	        /l,&f[local],&f,towny.chat.local,100
+	        
+	- Added a new mode '/towny spy', or '/res set mode spy'.
+	  This requires you have the permission node 'towny.chat.spy' and be using TownyChat.
+	  If you toggle this mode on you will be able to see all town/nation/global, and all custom channel chat.
+	- If a player doesn't have the 'towny.chat.global' permission node, any open chat will pass through for any other plugins to handle.
+v0.11:
+	- Fixed channel tag for the global channel.
+	- Fixed range test trying to cross worlds.
+v0.12:
+	- Major rewrite to move all channel handling into TownyChat.
+	- All chat channels are now defined in their own file 'Channels.yml' found in the Towny/Settings folder.
+	- Range limits can now be applied to town and nation chat.
+	- You can create two identical channels, one with a range limit and one without. The player will use whichever they have permission for.
+	- towny_default_modes now uses the full chat channel name. To allow use of the default channel it would be towny_default_modes: 'general'
+	- Moved ALL chat settings to 'ChatConfig.yml' found in the Towny/Settings folder.
+v0.13:
+	- Fixed channel modes when defaulting to a global channel not to place you in one of your own (Lonely spam).
+v0.14:
+	- The default permission node for the global chat channel has changed to 'towny.chat.general'
+	- TownyChat now registers is't permissions with Bukkit.
+v0.15:
+	- Updated for the new Bukkit Event system.
+v0.16:
+	- Lowered event priorities to HIGH to allow other plugins the chance to beat us to the event and cancel.
+	- Fixed Op's with no default mode set using local chat. It will now try global, then world, then local in it's search order.
+	- Added a new command '/townychat reload'.
+	- spam_time now accepts smaller values (eg. 0.5).
+v0.17:
+	- If a player has no permissions for any channel but we are still set to modify chat, remove the channelTag and msgcolour entries.
+	- Fix Spam timer to work in milliseconds so values of 0.5 actually work.
+	- Fix craftIRC hook to not spam console with an invalid number format error if the wrong version is detected.
+	- Add support for our updated HeroicDeath jar (hopefully someone will take over support for heroic Death now it's updated).
+v0.18:
+	- Added craftIRC channel tag support. A new entry per channel will allow you to set the endpoint tags for all channels to craftIRC (craftIRCTag: 'admin').
+	- Set default for new HeroicDeath interface to prevent new config errors.
+v0.19:
+	- Fix an error on startup if not using HeroicDeath.
+	- Remove old style event handler hook for old HeroicDeath.
+v0.20:
+	- Add serialization of numeric world names.
+	- Fix spacing in default formats.
+	- Unregister the 'towny' endpoint tag so it won't error when performing a reload.
+v0.21:
+	- Fix getAllPermissions in ChannelsHolder (thanks phrstbrn).
+	- Error trap registering permissions.
+	- Fix a possible small memory leak (phrstbrn).
+v0.22:
+	- Change channel sub classing method to allow 3rd party plugins to create their own channel types (phrstbrn).
+v0.23:
+	- Update for craftbukkit-1.1-R6.
+v0.24:
+	- Update to reflect permission changes in Towny.
+v0.25:
+	- Update to account for the refactoring in Towny.
+v0.26:
+	- Throw a "fake" PlayerChatEvent which will allow TownyChat to have much increased compatibility with other plugins (dumptruckman).
+v0.27:
+	- Cancel our own event after all other plugins have had a bash at the formatting.
+v0.28:
+	- Forget using any fake events and move to setting recipients. We should now be compatible with just about every other chat modifying plugin there is.
+v0.29:
+	- Fix a duplicating chat issue when relaying via craftIRC.
+	- Reload TownyChat if we detect craftIRC perform a reload (no more unregistered tags after reloading craftIRC).
+v0.30:
+	- Stop adding extra logs now that chat is being passed back to bukkit.
+v0.31:
+	- Update for the Bukkit move to AsyncPlayerChatEvent.
+	- Fix in onPlayerCommandPreprocess for an empty message error.
+v0.32:
+	- Don't check version of CraftIRC. Will work with all versions post 3.1.
+	- Fix for not colouring resident titles.
+v0.33:
+	- Only modify the chat format if modify_chat = true for all channels.
+v0.34:
+	- Make sure craftIRC is loaded first (if using)
+v0.35:
+	- Fix chat spy.
+v0.36:
+	- Added new channel handling support (thanks to mcunha/andrepl).
+	  Adds new commands...
+	  
+	  channel:
+        aliases: [ch]
+        description: Channel leaving and joining
+        usage: /channel leave|join channel
+        
+	  leave:
+        description: Leaves a channel
+        usage: /leave channel
+        permission: Requires a permissions per channel to use - towny.chat.leave.{channelname}
+        
+	  join:
+        description: Joins a channel
+        usage: /join channel
+        permission: Requires a permissions per channel to use - towny.chat.join.{channelname}
+        
+	  chmute:
+        aliases: [mute]
+        description: Mutes a player in a channel
+        usage: /chmute channel player
+        permission: townychat.mod.mute
+        
+	  mutelist:
+        description: Displays mute list for a channel
+        usage: /mutelist channel
+        
+	  chunmute:
+        aliases: [unmute]
+        description: Unmutes a player in a channel
+        usage: /chunmute channel player
+        permission: townychat.mod.unmute
+        
+v0.37:
+	- Remove mute alias on 'chmute' So TownyChat does not block Essentials mute.
+	
+v0.38:
+	- Fire chat Async so it matches all other chat.
+v0.39:
+	- Ignore cancelled commands and chat.
+v0.40:
+	- Allow global chat to pass through un-changed if there are no channels to talk in (requires setting modify_chat: false).
+v0.41:
+    - Adapt to Bukkit API Change.	
+v0.42:
+    - Re-add message for when players chat but no one can hear them. Affects mostly localchat but can also been seen when players are the only one in a channel.
+v0.43:
+	- add a new chatconfig.yml option:
+		- modify_chat.alone_message: (default: false) - If true any player who speaks in a channel in which he cannot be heard, either by being along in the channel or out-of-range of another player in his chat channel, that player will see a message saying they cannot be heard.     
+v0.44:
+    - add a /ch list command to list what channels a player is currently listening to. Courtesy of Yaiyan.
+v0.45:
+    - Add chatconfig.yml option for modifying the 'no one can hear you' message. 
+v0.46:
+    - Add ability to use colour codes (&) in chat line. Requires townychat.chat.color which is not given by default.
+v0.47:
+    - Add ability to use Bold (&l), Italics (&o), Underline (&n), Magic (&k), Strike (&m) and Reset (&r) in the channel_format lines/tag_formats/directly in the chat line.
+v0.48:
+    - Add new chatconfig tags {permuserprefix}, {permusersuffix}, used to show only user prefix and suffixes. Requires Towny 0.91.4.8 or newer to function properly!
+v0.49:
+    - Add new chatconfig tags {permgroupprefix}, {permgroupsuffix}, used to show only group prefix and suffixes. Requires Towny 0.91.4.13 or newer to function properly!
+v0.50:
+    - Chatconfig change: whereas before the tag_formats.both had to be set at [%s, %s], it can now be set to [%t, %n].
+      - Doing so would show the Town tag before the Nation tag, opposite behaviour as before.
+v0.51:
+    - New Permission node: townychat.chat.format.*
+      - default: op
+      - Provides the ability to use bold, italics, etc in chat.
+      - Child nodes: 
+        - townychat.chat.format.bold
+        - townychat.chat.format.italic
+        - townychat.chat.format.magic
+        - townychat.chat.format.undeline
+        - townychat.chat.format.strike
+    - New Permission node: townychat.chat.format.reset
+      - default: everyone
+      - Provides the ability to reset chat formatting to default using &r.
+v0.52:
+    - This Build Requires Towny version 0.92.0.10 or newer!
+    - Commented configuration now in effect on the ChatConfig.yml
+      - This means that new config nodes will be automatically added (just like in Towny.)
+      - pre-0.52 chatconfig files will load but will be slightly out of order. 
+      - It is recommended that you let TownyChat make a brand new chatconfig.yml
+        - stop your server.
+        - rename your chatconfig.yml to oldchatconfig.yml and let town.
+        - start your server. 
+        - compare the two chatconfigs and when your new chatconfig.yml is configured save it and use '/townychat reload'.
+      - The worlds section of the chatconfig will not auto-generate until the modify_chat.enable setting is set to true.
+        - If you do not see a worlds section and want to use per-world chat, set the modify_chat.enable setting to true and use '/townychat reload'.
+    - All strings have been made translate-able. Failure to use Towny Version 0.92.0.10 or newer will mean you see no messages.
+    - Improved error seen when channels.yml or chatconfig.yml will not load.
+v0.53:
+    - Fix botched-up Chat name in plugin.yml
+v0.54:
+    - Fixed channels not using correct names, also fixed the default channel. Courtesy of Articdive.
+    - Fixed being able to join channels you don't have permission for. Courtesy of Articdive.
+v0.55:
+    - Fix Async chat in Async threads, courtesy of Articdive.
+v0.56:
+    - Upgrade TownyChat to use the new Towny API (0.94.0.2+).
+v0.57:
+  - TownyChat now utilizes the Maven build system.
+  - EssentialsX Replaces Essentials for API, Dynmap-API is updated for Dynmap v3.
+  - Removed CraftIRC and HeroicDeath as dependencies.
+  - Remove ignorecancelled=true from AsyncPlayerChatEvent in order to make TC respect other plugins' cancelling of chat in some places. 
+  - New ChatConfig option: chat_colour.nomad
+    - Default: &f
+    - You can now set the {townycolour} for players without a town.
+  - Fix missing space following the title in {townyprefix} (when there is no mayor/king prefix present.)
+  - Add support for PlaceholderAPI's placeholders in the chatconfig.yml's Channel_format lines.
+v0.58:
+  - Drop API version back to 1.13 because there's a 0.95.0.0 for 1.13 that has the new TownyAPI in it.
+v0.59:
+  - Fix {townycolor} not rendering properly for nomads.
+v0.60:
+  - A more-thorough fix for TC still not respecting the cancelling of chat.
+v0.61:
+  - New Config Option: display_modes_set_on_join
+    - Default: true
+    - If true players will see [Towny] Modes set: general when they log in.
+v0.62:
+  - New Channel: AllianceChat
+    - Requires Towny 0.95.0.5 or newer.
+    - Will send messages to every online ally of your nation.
+    - Has its own channel_format in the chatconfig.yml.
+    - Your channels.yml will need to have an Alliance channel added.
+    - Default channels.yml is:
+    alliance:
+        commands: [ac]
+        type: ALLIANCE
+        channeltag: '&f[&2AC&f]'
+        messagecolour: '&a'
+        permission: 'towny.chat.alliance'
+        range: '-1'
+v0.63:
+  - Change: spam_time has been moved from the chatconfig.yml, to the channels.yml
+    - You do not have to set a spam_time for each channel, only the ones you want limited.
+    - setting spam_time: '0.5' in your general channel will make the global channel behave as normal.
+    - default channels.yml has spam_time: '0.5' set for general, town, nation and alliance channels; remaining channels have no spam_time set.
+    - in your chatconfig.yml you can remove the "spam_time: '0.5'" line before or after updating. 
+  - New Permission Node: townychat.spam.bypass
+    - Defaults to ops.
+    - Bypasses spam check.
+v0.64:
+  - Removed "[Towny] Modes set: " line seen when a player changes channels.
+v0.65:
+  - Altered behaviour:
+    - Previously using the channel command for the channel you're already speaking in would move you to the next default channel, 
+      or if non was found, the next global channel.
+    - Ex: While being in townchat you use "/tc" you could find yourself in globalchat.
+    - Now you will be told you're already in the channel you just used the command to enter into.
+  - Fixed: GLOBAL channelTypes (default: general and local channels) are no longer formatted by TownyChat if modify_chat.enabled is false.
+    - DEFAULT, TOWN, NATION & ALLIANCE types are still formatted by Towny when modify_chat.enable is false.
+    - Closes: https://github.com/TownyAdvanced/Towny/issues/3568 
+v0.66:
+  - Fix for removed TownyFormatter methods, required for Towny 0.95.2.18 and newer.
+v0.67:
+  - Fix for TownyChat overwriting towny_default_modes player modes on login.
+v0.68:
+  - Updated comments to reflect change with toggling chats, courtesy of GenSecrets with PR #25.
+v0.69:
+  - Fix missing spaces from {title} & {surname} & {townypostfix}.
+v0.70:
+  - Allow for $ and \ to be used in the chat line.
+    - Closes: https://github.com/TownyAdvanced/Towny/issues/3960
+  - People spying on chat will now see the chat formatted differently from normal. 
+    - De-clutters the chat.
+    - Closes: https://github.com/TownyAdvanced/Towny/issues/2665 
+v0.71:
+  - Bugfixes on the AsyncChatHookEvents, courtesy of Rebstew with PR #26.
+v0.72:
+  - Fix ConcurrentModificationException caused by spies.
+    - Closes https://github.com/TownyAdvanced/Towny/issues/4077
+v0.73:
+  - Add Hex Color Support to TownyChat, courtesy of Siris with PR #27.
+    - The format for hex colors is a # symbol followed by 6 numbers.
+    - You can use any of the 3 formats:
+    - #RRGGBB
+    - &#RRGGBB
+    - {#RRGGBB}
+v0.74:
+  - Fix 0.96.2.5+ Towny API error spam.
+v0.75:
+  - Replace deprecated getLangString code.
+  - Update to fix spying on servers with DeluxeChat.
+  - Fix changing chat channels removing non-channel modes.
+  - Add Towny version checking to enforce min. required versions.
+v0.76:
+  - Fix chat format line not parsing hex colors, courtesy of Siris with PR #28.
+    - Closes https://github.com/TownyAdvanced/Towny/issues/4159.
+v0.77: 
+  - Build against 0.96.2.12, minimum required Towny version now 0.96.2.12.

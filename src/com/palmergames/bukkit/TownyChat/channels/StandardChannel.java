@@ -1,31 +1,33 @@
 package com.palmergames.bukkit.TownyChat.channels;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.dynmap.DynmapAPI;
-
 import com.earth2me.essentials.User;
 import com.palmergames.bukkit.TownyChat.Chat;
-import com.palmergames.bukkit.TownyChat.CraftIRCHandler;
 import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
 import com.palmergames.bukkit.TownyChat.events.AsyncChatHookEvent;
 import com.palmergames.bukkit.TownyChat.listener.LocalTownyChatEvent;
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-import com.palmergames.bukkit.util.BukkitTools;
+import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.util.Colors;
+
+import me.clip.placeholderapi.PlaceholderAPI;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.dynmap.DynmapAPI;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class StandardChannel extends Channel {
 
@@ -49,7 +51,7 @@ public class StandardChannel extends Channel {
 		String Format = "";
 		
 		try {
-			resident = TownyUniverse.getDataSource().getResident(player.getName());
+			resident = TownyUniverse.getInstance().getDataSource().getResident(player.getName());
 			town = resident.getTown();
 			nation = resident.getTown().getNation();
 		} catch (NotRegisteredException e1) {
@@ -76,8 +78,7 @@ public class StandardChannel extends Channel {
 				return;
 			}
 			Format = ChatSettings.getRelevantFormatGroup(player).getTOWN();
-			recipients = new HashSet<Player>(findRecipients(player, TownyUniverse.getOnlinePlayers(town)));
-			recipients = checkSpying(recipients);
+			recipients = new HashSet<>(findRecipients(player, TownyAPI.getInstance().getOnlinePlayers(town)));
 			break;
 		
 		case NATION:
@@ -86,36 +87,49 @@ public class StandardChannel extends Channel {
 				return;
 			}
 			Format = ChatSettings.getRelevantFormatGroup(player).getNATION();
-			recipients = new HashSet<Player>(findRecipients(player, TownyUniverse.getOnlinePlayers(nation)));
-			recipients = checkSpying(recipients);
+			recipients = new HashSet<>(findRecipients(player, TownyAPI.getInstance().getOnlinePlayers(nation)));
+			break;
+			
+		case ALLIANCE:
+			if (nation == null) {
+				event.setCancelled(true);
+				return;
+			}
+			Format = ChatSettings.getRelevantFormatGroup(player).getALLIANCE();
+			recipients = new HashSet<>(findRecipients(player, TownyAPI.getInstance().getOnlinePlayersAlliance(nation)));
 			break;
 			
 		case DEFAULT:
 			Format = ChatSettings.getRelevantFormatGroup(player).getDEFAULT();
-			recipients = new HashSet<Player>(findRecipients(player, new ArrayList<Player>(Arrays.asList(BukkitTools.getOnlinePlayers()))));
+			recipients = new HashSet<>(findRecipients(player, new ArrayList<>(event.getRecipients())));
 			break;
 			
 		case GLOBAL:
 			Format = ChatSettings.getRelevantFormatGroup(player).getGLOBAL();
-			recipients = new HashSet<Player>(findRecipients(player, new ArrayList<Player>(Arrays.asList(BukkitTools.getOnlinePlayers()))));
+			recipients = new HashSet<>(findRecipients(player, new ArrayList<>(event.getRecipients())));
 			break;
 			
 		case PRIVATE:
 			Format = ChatSettings.getRelevantFormatGroup(player).getGLOBAL();
-			recipients = new HashSet<Player>(findRecipients(player, new ArrayList<Player>(Arrays.asList(BukkitTools.getOnlinePlayers()))));
+			recipients = new HashSet<>(findRecipients(player, new ArrayList<>(event.getRecipients())));
 			break;
 		}
-		
+
 		/*
 		 * Perform all replace functions on this format
 		 */
-		//if (ChatSettings.isModify_chat())
+		if (Chat.usingPlaceholderAPI) {	    	
+            Format = PlaceholderAPI.setPlaceholders(player, Format);
+	    }		
+
+		/*
+		 * Only modify GLOBAL channelType chat (general and local chat channels) if isModifyChat() is true.
+		 */
+		if (!(exec.equals(channelTypes.GLOBAL) && !ChatSettings.isModify_chat()))  {
 			event.setFormat(Format.replace("{channelTag}", getChannelTag()).replace("{msgcolour}", getMessageColour()));
-		//else
-		//	event.setFormat(event.getFormat().replace("{channelTag}", getChannelTag()).replace("{msgcolour}", getMessageColour()));
-		
-		LocalTownyChatEvent chatEvent = new LocalTownyChatEvent(event, resident);
-		event.setFormat(TownyChatFormatter.getChatFormat(chatEvent));
+			LocalTownyChatEvent chatEvent = new LocalTownyChatEvent(event, resident);
+			event.setFormat(TownyChatFormatter.getChatFormat(chatEvent));
+		}
 		
 		/*
 		 *  Set all the listeners for Bukkit to send this message to.
@@ -124,18 +138,29 @@ public class StandardChannel extends Channel {
         event.getRecipients().addAll(recipients);
         
         if (isHooked()) {
-        	AsyncChatHookEvent hookEvent = new AsyncChatHookEvent(event, this);
+        	AsyncChatHookEvent hookEvent = new AsyncChatHookEvent(event, this, !Bukkit.getServer().isPrimaryThread());
             Bukkit.getServer().getPluginManager().callEvent(hookEvent);
             if (hookEvent.isCancelled()) {
             	event.setCancelled(true);
             	return;
             }
+            /*
+             * Send spy message before another plugin changes any of the recipients,
+             * so we know which people can see it.
+             */
+            sendSpyMessage(event, exec);
+            
             if (hookEvent.isChanged()) {
             	event.setMessage(hookEvent.getMessage());
             	event.setFormat(hookEvent.getFormat());
                 event.getRecipients().clear();
                 event.getRecipients().addAll(hookEvent.getRecipients());
             }
+        } else {
+        	/*
+        	 * Send spy message.
+        	 */
+        	sendSpyMessage(event, exec);
         }
 
         if (notifyjoin) {
@@ -144,18 +169,17 @@ public class StandardChannel extends Channel {
 
         /*
          * Perform any last channel specific functions
-         * like logging this chat and relaying to IRC/Dynmap.
+         * like logging this chat and relaying to Dynmap.
          */
-        String msg = event.getFormat().replace("%1$s", event.getPlayer().getDisplayName()).replace("%2$s", event.getMessage());
-        
         switch (exec) {
 		
 		case TOWN:
-			//plugin.getLogger().info(ChatTools.stripColour("[Town Msg] " + town.getName() + ": " + msg));
 			break;
 		
 		case NATION:
-			//plugin.getLogger().info(ChatTools.stripColour("[Nation Msg] " + nation.getName() + ": " + msg));
+			break;
+		
+		case ALLIANCE:
 			break;
 			
 		case DEFAULT:
@@ -169,20 +193,17 @@ public class StandardChannel extends Channel {
 				dynMap.postPlayerMessageToWeb(player, event.getMessage());
 			break;
 		}
-        
-        // Relay to IRC
-        CraftIRCHandler ircHander = plugin.getIRC();
-        if (ircHander != null)
-        	ircHander.IRCSender(msg, getCraftIRCTag());
-		
+
 	}
+
+
 
 	/**
 	 * Check the distance between players and return a result based upon the range setting
 	 * -1 = no limit
 	 * 0 = same world
 	 * any positive value = distance in blocks
-	 * 
+	 *
 	 * @param player1
 	 * @param player2
 	 * @param range
@@ -207,30 +228,30 @@ public class StandardChannel extends Channel {
 	
 	/**
 	 * Compile a list of valid recipients for this message.
-	 * 
+	 *
 	 * @param sender
 	 * @param list
 	 * @return Set containing a list of players for this message.
 	 */
+	@SuppressWarnings("deprecation")
 	private Set<Player> findRecipients(Player sender, List<Player> list) {
 		
-		Set<Player> recipients = new HashSet<Player>();
-		Boolean bEssentials = plugin.getTowny().isEssentials();
+		Set<Player> recipients = new HashSet<>();
+		boolean bEssentials = plugin.getTowny().isEssentials();
 		String sendersName = sender.getName();
 		
 		// Compile the list of recipients
         for (Player test : list) {
         	
         	/*
-        	 * If Not using permissions, or the player has the correct permission node.
+        	 * If the player has the correct permission node.
         	 */
-        	if (!plugin.getTowny().isPermissions() || (plugin.getTowny().isPermissions() && TownyUniverse.getPermissionSource().has(test, getPermission()))) {
+        	if (TownyUniverse.getInstance().getPermissionSource().has(test, getPermission())) {
         		
         		/*
-        		 * If the player is within range for this channel
-        		 * or the recipient has the spy mode.
+        		 * If the player is within range for this channel.
         		 */
-	        	if ((testDistance(sender, test, getRange())) || (plugin.getTowny().hasPlayerMode(test, "spy"))) {
+	        	if (testDistance(sender, test, getRange())){
 	        		
 	        		if (bEssentials) {
 						try {
@@ -257,24 +278,81 @@ public class StandardChannel extends Channel {
         	}
         }
         
-        //if (recipients.size() <= 1)
-        //	sender.sendMessage(TownySettings.parseSingleLineString("&cYou feel so lonely."));
-        
+        if ((recipients.size() <= 1) && (ChatSettings.isUsingAloneMessage()))
+        	sender.sendMessage(ChatSettings.getUsingAloneMessageString());
+
         return recipients;
 	}
 	
 	/**
-	 * Add all spying players to the recipients list.
+	 * Sends messages to spies who have not already seen the message naturally.
 	 * 
+	 * @param event - Chat Event.
+	 * @param type - Channel Type
+	 */
+	private void sendSpyMessage(AsyncPlayerChatEvent event, channelTypes type) {		
+		Set<Player> recipients = new HashSet<>();				
+		Set<Player> spies = new HashSet<>();
+		
+		recipients.addAll(event.getRecipients());
+		spies = checkSpying(spies);
+		String format = formatSpyMessage(type, event.getPlayer());
+		
+		// Remove spies who've already seen the message naturally.
+		for (Player spy : spies)
+			if (recipients.contains(spy))
+				continue;
+			else
+				spy.sendMessage(ChatColor.GOLD + "[SPY] " + ChatColor.WHITE + format + ": " + event.getMessage());
+	}
+
+	/**
+	 * Formats look of message for spies
+	 * 
+	 * @param type - Channel Type.
+	 * @param player - Player who chatted.
+	 * @return format - Message format.
+	 */
+	private String formatSpyMessage(channelTypes type, Player player) {
+		Resident resident = null;
+		Town town = null;
+		Nation nation = null;
+		try {
+			resident = TownyUniverse.getInstance().getDataSource().getResident(player.getName());
+			town = resident.getTown();
+			nation = resident.getTown().getNation();
+		} catch (NotRegisteredException e1) {
+			// Not in a town/nation (doesn't matter which)
+		}
+		String format = ChatColor.translateAlternateColorCodes('&', getChannelTag());
+		switch (type) {
+			case TOWN:
+				format = format + " [" + town.getName() + "] " + resident.getName();
+				break;
+			case NATION:
+			case ALLIANCE:
+				format = format + " [" + nation.getName() + "] " + resident.getName();
+				break;
+			case GLOBAL:
+			case PRIVATE:
+			case DEFAULT:
+				format = format + " " + resident.getName();
+				break;
+		}
+		return format;
+	}
+	
+	/**
+	 * Add all spying players to the recipients list.
+	 *
 	 * @param recipients
 	 * @return new recipients including spying.
 	 */
 	private Set<Player> checkSpying(Set<Player> recipients) {
 
-		List<Player> allOnline = new ArrayList<Player>(Arrays.asList(BukkitTools.getOnlinePlayers()));
 		
 		// Compile the list of recipients with spy perms
-        for (Player test : allOnline) {
+		for (Player test : plugin.getServer().getOnlinePlayers()) {
         	
         	if ((plugin.getTowny().hasPlayerMode(test, "spy")) && !(recipients.contains(test))) {
         		recipients.add(test);

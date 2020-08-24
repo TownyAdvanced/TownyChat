@@ -1,0 +1,59 @@
+name: TownyChat
+main: com.palmergames.bukkit.TownyChat.Chat
+version: ${project.version}
+api-version: ${project.bukkitAPIVersion}
+authors: [ElgarL, Shade, phrstbrn, LlmDl]
+website: http://towny.palmergames.com/towny/townychat/
+description: >
+    TownyChat plugin which hooks into Towny.
+
+softdepend: [Towny, CraftIRC, PlaceholderAPI, dynmap]
+
+############################################################
+# +------------------------------------------------------+ #
+# |                 Chat commands                   | #
+# +------------------------------------------------------+ #
+############################################################
+commands:
+    townychat:
+        aliases: []
+        usage: /townychat reload
+        permission: townychat.reload
+    channel:
+        aliases: [ch, join, leave, mutelist, chmute, chunmute]
+        description: Channel leaving and joining
+        usage: /<command> join|leave|list channel
+            
+############################################################
+# +------------------------------------------------------+ #
+# |                     Permissions                      | #
+# +------------------------------------------------------+ #
+############################################################
+permissions:
+    townychat.reload:
+        description: Allows reloading of Townychat.
+        default: op
+    townychat.mod.mute:
+        description: Allows mods access to the mute command to mute a player in a channel.
+        default: op
+    townychat.mod.unmute:
+        description: Allows mods access to the unmute command to remove a previous mute.
+        default: op
+    townychat.chat.color:
+        description: Allows players to use colors to format chat messages.
+        default: op
+    townychat.chat.format.*:
+        description: Allows use of all chat format modifiers like bold, italics, etc.
+        default: op
+        children:
+            townychat.chat.format.bold: true
+            townychat.chat.format.italic: true
+            townychat.chat.format.magic: true
+            townychat.chat.format.underline: true
+            townychat.chat.format.strike: true
+    townychat.chat.format.reset:
+        description: Allows the use of &r to reset chat formatting.
+        default: true
+    townychat.spam.bypass:
+        description: Keeps a player from getting stopped by spam checks.
+        default: op

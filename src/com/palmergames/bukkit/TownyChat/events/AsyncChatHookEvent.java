@@ -1,27 +1,44 @@
 package com.palmergames.bukkit.TownyChat.events;
 
-import java.util.Set;
-
+import com.palmergames.bukkit.TownyChat.channels.Channel;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import com.palmergames.bukkit.TownyChat.channels.Channel;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
  * Allows other plugins to hook into a chat message being accepted into any of the channels
+ * 
+ * In order to use this event, you will have to add the hooked: true flag to the channel you wish you hook in the channels.yml
+ * 
+ * ex:
+ * 
+ *Channels:
+ *  general:
+ *      commands: [g]
+ *      type: GLOBAL
+ *      hooked: true
+ *      channeltag: '&f[g]'
+ *      messagecolour: '&f'
+ *      permission: 'towny.chat.general'
+ *      range: '-1'
  */
 public class AsyncChatHookEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-	protected AsyncPlayerChatEvent event = null;
-	protected boolean changed = false;
-	protected Channel channel=null;
+	protected AsyncPlayerChatEvent event;
+	protected boolean changed;
+	protected Channel channel;
+	protected Set<Player> recipients;
 
-	public AsyncChatHookEvent(AsyncPlayerChatEvent event, Channel channel) {
+	public AsyncChatHookEvent(AsyncPlayerChatEvent event, Channel channel, boolean async) {
+		super(async);
 		this.event = event;
 		this.changed = false;
 		this.channel = channel;
+		this.recipients = new HashSet<>(event.getRecipients());
 	}
 
 	public Channel getChannel() {
@@ -36,7 +53,7 @@ public class AsyncChatHookEvent extends Event {
 	}
 
 	/*
-	 * Informs TownyChat if the event was changed or not
+	 * Informs Chat if the event was changed or not
 	 */
 	public void setChanged(boolean changed) {
 		this.changed = changed;
@@ -55,7 +72,7 @@ public class AsyncChatHookEvent extends Event {
 	}
 	
 	public Set<Player> getRecipients() {
-		return event.getRecipients();
+		return this.recipients;
 	}
 	
 	public boolean isCancelled() {
@@ -68,8 +85,8 @@ public class AsyncChatHookEvent extends Event {
 	
 	public void setRecipients(Set<Player> recipients) {
 		changed = true;
-		event.getRecipients().clear();
-		event.getRecipients().addAll(recipients);
+		this.recipients.clear();
+		this.recipients.addAll(recipients);
 	}
 	
 	public void setFormat(String format) {
@@ -79,11 +96,11 @@ public class AsyncChatHookEvent extends Event {
 	
 	public void setMessage(String message) {
 		changed = true;
-		event.setFormat(message);
+		event.setMessage(message);
 	}
 	
 	public void setCancelled(boolean cancel) {
-		changed = (cancel == true);
+		changed = (cancel);
 		event.setCancelled(cancel);
 	}
 
