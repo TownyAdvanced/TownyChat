@@ -68,10 +68,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>dv8tion</id>
-            <url>https://m2.dv8tion.net/releases/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -116,6 +112,12 @@
             <artifactId>EssentialsXDiscord</artifactId>
             <version>57600f333c</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.dv8tion</groupId>
+                    <artifactId>JDA</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
