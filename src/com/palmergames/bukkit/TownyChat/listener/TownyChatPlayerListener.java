@@ -116,22 +116,24 @@ public class TownyChatPlayerListener implements Listener  {
 			 */
 			if (directedChat.containsKey(player)) {
 				Channel channel = plugin.getChannelsHandler().getChannel(player, directedChat.get(player));
-				directedChat.remove(player);
 				
 				if (channel != null) {
 					// Notify player he is muted
 					if (channel.isMuted(player.getName())) {
 						TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
 						event.setCancelled(true);
+						directedChat.remove(player);
 						return;
 					}
 					if (channel.isSpam(player)) {
 						event.setCancelled(true);
+						directedChat.remove(player);
 						return;
 					}
 					channel.chatProcess(event);
 					return;
 				}
+				directedChat.remove(player);
 			}
 			
 			/*

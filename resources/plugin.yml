@@ -7,7 +7,7 @@ website: http://towny.palmergames.com/towny/townychat/
 description: >
     TownyChat plugin which hooks into Towny.
 depend: [Towny]
-softdepend: [CraftIRC, PlaceholderAPI, dynmap]
+softdepend: [CraftIRC, PlaceholderAPI, dynmap, EssentialsDiscord]
 
 ############################################################
 # +------------------------------------------------------+ #
