@@ -131,6 +131,9 @@ public class TownyChatPlayerListener implements Listener  {
 						return;
 					}
 					channel.chatProcess(event);
+					if (!Chat.usingEssentialsDiscord || event.isCancelled()) {
+						directedChat.remove(player);
+					}
 					return;
 				}
 				directedChat.remove(player);

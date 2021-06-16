@@ -7,6 +7,7 @@ import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.ChannelsHolder;
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
 import com.palmergames.bukkit.TownyChat.config.ConfigurationHandler;
+import com.palmergames.bukkit.TownyChat.listener.EssentialsDiscordHookListener;
 import com.palmergames.bukkit.TownyChat.listener.TownyChatPlayerListener;
 import com.palmergames.bukkit.TownyChat.tasks.onLoadedTask;
 import com.palmergames.bukkit.TownyChat.util.FileMgmt;
@@ -162,7 +163,7 @@ public class Chat extends JavaPlugin {
 		}
 
 		if (usingEssentialsDiscord) {
-			pm.registerEvents(new TownyChatPlayerListener(this), this);
+			pm.registerEvents(new EssentialsDiscordHookListener(this), this);
 		}
 	}
 	
