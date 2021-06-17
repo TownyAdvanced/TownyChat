@@ -79,13 +79,11 @@ public class ChannelsHolder {
 	 * @return channel or null if not permitted
 	 */
 	public Channel getChannel(Player player, String command) {
-
-		if (command != null) {
-			for (Channel channel : channels.values()) {
-				if (channel.getCommands().contains(command.toLowerCase())) {
-					if (TownyUniverse.getInstance().getPermissionSource().has(player, channel.getPermission()) || (channel.getPermission().isEmpty()))
-						return channel;
-				}
+		
+		for (Channel channel: channels.values()) {
+			if (channel.getCommands().contains(command.toLowerCase())) {
+				if (TownyUniverse.getInstance().getPermissionSource().has(player, channel.getPermission()) || (channel.getPermission().isEmpty())) 
+					return channel;				
 			}
 		}
 		return null;
