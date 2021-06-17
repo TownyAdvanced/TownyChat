@@ -14,11 +14,14 @@ public class EssentialsDiscordHookListener implements Listener {
     this.plugin = plugin;
   }
 
-  @EventHandler(ignoreCancelled = true)
+  @EventHandler()
   public void onDiscordChat(DiscordChatMessageEvent event) {
     String directChat = plugin.getTownyPlayerListener().directedChat.get(event.getPlayer());
     if (directChat != null) {
       plugin.getTownyPlayerListener().directedChat.remove(event.getPlayer());
+      if (event.isCancelled()) {
+        return;
+      }
       Channel channel = plugin.getChannelsHandler().getChannel(event.getPlayer(), directChat);
       if (channel != null) {
         event.setCancelled(!channel.isHooked() || channel.getType() != channelTypes.GLOBAL || channel.getRange() != -1);
