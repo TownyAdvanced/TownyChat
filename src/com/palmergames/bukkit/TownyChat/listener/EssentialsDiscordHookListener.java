@@ -24,21 +24,21 @@ public class EssentialsDiscordHookListener implements Listener {
       }
       Channel channel = plugin.getChannelsHandler().getChannel(event.getPlayer(), directChat);
       if (channel != null) {
-        event.setCancelled(!channel.isHooked() || channel.getType() != channelTypes.GLOBAL || channel.getRange() != -1);
+        event.setCancelled(channel.getType() != channelTypes.GLOBAL || channel.getRange() != -1);
         return;
       }
     }
 
     for (Channel curChannel : plugin.getChannelsHandler().getAllChannels().values()) {
       if (plugin.getTowny().hasPlayerMode(event.getPlayer(), curChannel.getName())) {
-        event.setCancelled(!curChannel.isHooked() || curChannel.getType() != channelTypes.GLOBAL || curChannel.getRange() != -1);
+        event.setCancelled( curChannel.getType() != channelTypes.GLOBAL || curChannel.getRange() != -1);
         return;
       }
     }
 
     Channel channel = plugin.getChannelsHandler().getActiveChannel(event.getPlayer(), channelTypes.GLOBAL);
     if (channel != null) {
-      event.setCancelled(!channel.isHooked() || channel.getType() != channelTypes.GLOBAL || channel.getRange() != -1);
+      event.setCancelled(channel.getType() != channelTypes.GLOBAL || channel.getRange() != -1);
     }
   }
 }
