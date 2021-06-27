@@ -7,6 +7,13 @@ import net.essentialsx.api.v2.events.discord.DiscordChatMessageEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+/**
+ * Listener which stops non-global or limited-range 
+ * chats from passing on to EssentialsDiscord.
+ * 
+ * @author JRoy
+ * @since 0.90
+ */
 public class EssentialsDiscordHookListener implements Listener {
   private final Chat plugin;
 
