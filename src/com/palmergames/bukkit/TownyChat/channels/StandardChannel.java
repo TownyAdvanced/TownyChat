@@ -169,6 +169,7 @@ public class StandardChannel extends Channel {
 					recipient.playSound(player.getLocation(), Sound.valueOf(getChannelSound()), 1.0f, 1.0f);
 				} catch (IllegalArgumentException ex) {
 					plugin.getLogger().warning("Channel " + this.getName() + " has an invalid sound configured.");
+					setChannelSound(null);
 					break;
 				}
             }
