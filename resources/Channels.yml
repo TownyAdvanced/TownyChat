@@ -31,6 +31,11 @@
 # DarkPurple = &9, LightGreen = &a, LightBlue = &b
 # Rose = &c, LightPurple = &d, Yellow = &e, White = &f
 
+# Sounds
+# ------
+# Each channel can have a sound by adding sound: SOUND_TO_USE
+# Sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+
 Channels:
     general:
         commands: [g]
