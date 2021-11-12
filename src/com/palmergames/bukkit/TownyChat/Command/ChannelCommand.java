@@ -39,6 +39,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 		channel_help.add(ChatTools.formatCommand("", "/channel", "mute [Channel] [Player]", ""));
 		channel_help.add(ChatTools.formatCommand("", "/channel", "unmute [Channel] [Player]", ""));
 		channel_help.add(ChatTools.formatCommand("", "/channel", "mutelist [Channel]", ""));
+		channel_help.add(ChatTools.formatCommand("", "/channel", "soundtoggle [Channel]", ""));
 
 	}
 
@@ -106,6 +107,8 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 			parseChannelMuteList(player, StringMgmt.remFirstArg(split));
 		} else if (split[0].equalsIgnoreCase("list")) {
 			parseChannelList(player);
+		} else if (split[0].equalsIgnoreCase("soundtoggle")) {
+			parseChannelSoundToggle(player, StringMgmt.remFirstArg(split));
 		}
 
 	}
@@ -387,5 +390,23 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 		Bukkit.getPluginManager().callEvent(new PlayerJoinChatChannelEvent(player, chan));
 
 		TownyMessaging.sendMessage(player, Translation.of("tc_you_joined_channel", chan.getName()));
+	}
+
+	public static void parseChannelSoundToggle(Player player, String[] split) {
+		if (split.length == 0) {
+			for (String line : channel_help) {
+				player.sendMessage(line);
+			}
+			return;
+		}
+		Channel chan = plugin.getChannelsHandler().getChannel(split[0]);
+
+		if (chan.isSoundMuted(player)) {
+			chan.unmuteSound(player);
+			TownyMessaging.sendMessage(player, Translation.of("tc_player_channel_sound_unmuted"));
+		} else {
+			chan.muteSound(player);
+			TownyMessaging.sendMessage(player, Translation.of("tc_player_channel_sound_muted"));
+		}
 	}
 }

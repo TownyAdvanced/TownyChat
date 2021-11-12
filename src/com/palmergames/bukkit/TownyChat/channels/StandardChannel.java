@@ -22,6 +22,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.dynmap.DynmapAPI;
@@ -159,6 +160,12 @@ public class StandardChannel extends Channel {
         	 * Send spy message.
         	 */
         	sendSpyMessage(event, channelType);
+        }
+
+        for (Player recipient : event.getRecipients()) {
+            if (!isSoundMuted(player)) {
+                recipient.playSound(player.getLocation(), Sound.valueOf(getChannelSound()), 1.0f, 1.0f);
+            }
         }
 
         if (notifyjoin) {

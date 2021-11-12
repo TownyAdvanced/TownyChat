@@ -21,7 +21,7 @@ public abstract class Channel {
 	private String name;
 	private List<String> commands;
 	private channelTypes type;
-	private String channelTag, messageColour, permission, leavePermission;
+	private String channelTag, messageColour, permission, leavePermission, channelSound;
 	private double range;
 	private boolean hooked=false;
 	private boolean autojoin=true;
@@ -209,6 +209,18 @@ public abstract class Channel {
 		mutedPlayers.remove(name);
 		return true;
 	}
+
+	public boolean isSoundMuted(Player player) {
+		return playerIgnoringSoundMeta(player);
+	}
+
+	public void muteSound(Player player) {
+		playerAddSoundIgnoreMeta(player);
+	}
+
+	public void unmuteSound(Player player) {
+		playerRemoveSoundIgnoreMeta(player);
+	}
 	
 	/*
 	 * Get name of permissions node to leave a the channel 
@@ -255,6 +267,14 @@ public abstract class Channel {
 
 	public void setSpam_time(double spamtime) {
 		this.spamtime = spamtime;
+	}
+
+	public String getChannelSound() {
+		return channelSound;
+	}
+
+	public void setChannelSound(String channelSound) {
+		this.channelSound = channelSound;
 	}
 	
 	/**
@@ -337,6 +357,67 @@ public abstract class Channel {
 	private boolean playerIgnoringThisChannel(Player player) {
 		StringDataField idf = new StringDataField("townychat_ignoredChannels", "", "Ignored TownyChat Channels");
 		Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId()); 
+		if (resident != null && resident.hasMeta(idf.getKey())) {
+			CustomDataField<?> cdf = resident.getMetadata(idf.getKey());
+			if (cdf instanceof StringDataField) {
+				StringDataField sdf = (StringDataField) cdf;
+				String[] split = sdf.getValue().split("\uFF0C ");
+				for (String string : split)
+					if (string.equalsIgnoreCase(this.getName()))
+						return true;
+			}
+		}
+		return false;
+	}
+
+	private void playerAddSoundIgnoreMeta(Player player) {
+		StringDataField icdf = new StringDataField("townychat_soundOffChannels", "", "TownyChat Channels with Sound Toggle Off");
+		Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+		if (resident == null)
+			return;
+
+		if (resident.hasMeta(icdf.getKey())) {
+			CustomDataField<?> cdf = resident.getMetadata(icdf.getKey());
+			if (cdf instanceof StringDataField) {
+				StringDataField sdf = (StringDataField) cdf;
+				sdf.setValue(sdf.getValue().concat("\uFF0C " + this.getName()));
+				TownyUniverse.getInstance().getDataSource().saveResident(resident);
+			}
+		} else {
+			resident.addMetaData(new StringDataField("townychat_soundOffChannels", this.getName(), "TownyChat Channels with Sound Toggle Off"));
+		}
+	}
+
+	private void playerRemoveSoundIgnoreMeta(Player player) {
+		StringDataField icdf = new StringDataField("townychat_soundOffChannels", "", "TownyChat Channels with Sound Toggle Off");
+		Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+		if (resident == null || !resident.hasMeta(icdf.getKey()))
+			return;
+
+		CustomDataField<?> cdf = resident.getMetadata(icdf.getKey());
+		if (cdf instanceof StringDataField) {
+			StringDataField sdf = (StringDataField) cdf;
+			String newValues = "";
+			String[] values = sdf.getValue().split("\uFF0C ");
+			for (String chanName : values)
+				if (!chanName.equalsIgnoreCase(this.getName()))
+					if (newValues.isEmpty())
+						newValues = chanName;
+					else
+						newValues += "\uFF0C " + chanName;
+
+			if (!newValues.isEmpty()) {
+				sdf.setValue(newValues);
+				TownyUniverse.getInstance().getDataSource().saveResident(resident);
+			} else {
+				resident.removeMetaData(icdf);
+			}
+		}
+	}
+
+	private boolean playerIgnoringSoundMeta(Player player) {
+		StringDataField idf = new StringDataField("townychat_soundOffChannels", "", "TownyChat Channels with Sound Toggle Off");
+		Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
 		if (resident != null && resident.hasMeta(idf.getKey())) {
 			CustomDataField<?> cdf = resident.getMetadata(idf.getKey());
 			if (cdf instanceof StringDataField) {

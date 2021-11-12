@@ -137,6 +137,9 @@ public class ConfigurationHandler {
 		
 								if (key.equalsIgnoreCase("range"))
 									channel.setRange(Double.valueOf(element.toString()));
+
+                                if (key.equalsIgnoreCase("sound"))
+                                    channel.setChannelSound(String.valueOf(element));
 							}
 							
 							// If no leave permission is set, create a default permission name
