@@ -163,7 +163,7 @@ public class StandardChannel extends Channel {
         }
 
         for (Player recipient : event.getRecipients()) {
-            if (!isSoundMuted(player)) {
+            if (getChannelSound() != null && !isSoundMuted(player)) {
                 recipient.playSound(player.getLocation(), Sound.valueOf(getChannelSound()), 1.0f, 1.0f);
             }
         }
