@@ -162,18 +162,20 @@ public class StandardChannel extends Channel {
         	sendSpyMessage(event, channelType);
         }
 
-        for (Player recipient : event.getRecipients()) {
-			if (getChannelSound() == null) break;
-            if (!isSoundMuted(player)) {
-                try {
-					recipient.playSound(player.getLocation(), Sound.valueOf(getChannelSound()), 1.0f, 1.0f);
-				} catch (IllegalArgumentException ex) {
-					plugin.getLogger().warning("Channel " + this.getName() + " has an invalid sound configured.");
-					setChannelSound(null);
-					break;
+		if (getChannelSound() != null) {
+			for (Player recipient : event.getRecipients()) {
+				if (!isSoundMuted(player)) {
+					try {
+						recipient.playSound(player.getLocation(), Sound.valueOf(getChannelSound()), 1.0f, 1.0f);
+					} catch (IllegalArgumentException ex) {
+						plugin.getLogger().warning("Channel " + this.getName() + " has an invalid sound configured.");
+						setChannelSound(null);
+						break;
+					}
 				}
-            }
-        }
+			}
+		}
+
 
         if (notifyjoin) {
 			TownyMessaging.sendMessage(player, "You join " + Colors.White + getName());
