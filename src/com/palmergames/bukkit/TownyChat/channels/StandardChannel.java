@@ -163,8 +163,14 @@ public class StandardChannel extends Channel {
         }
 
         for (Player recipient : event.getRecipients()) {
-            if (getChannelSound() != null && !isSoundMuted(player)) {
-                recipient.playSound(player.getLocation(), Sound.valueOf(getChannelSound()), 1.0f, 1.0f);
+			if (getChannelSound() == null) break;
+            if (!isSoundMuted(player)) {
+                try {
+					recipient.playSound(player.getLocation(), Sound.valueOf(getChannelSound()), 1.0f, 1.0f);
+				} catch (IllegalArgumentException ex) {
+					plugin.getLogger().warning("Channel " + this.getName() + " has an invalid sound configured.");
+					break;
+				}
             }
         }
 
