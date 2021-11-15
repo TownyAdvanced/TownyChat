@@ -7,6 +7,7 @@ import com.palmergames.bukkit.TownyChat.events.PlayerJoinChatChannelEvent;
 import com.palmergames.bukkit.TownyChat.util.TownyUtil;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.command.BaseCommand;
+import com.palmergames.bukkit.towny.object.Translatable;
 import com.palmergames.bukkit.towny.object.Translation;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.util.ChatTools;
@@ -401,12 +402,17 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 		}
 		Channel chan = plugin.getChannelsHandler().getChannel(split[0]);
 
+		if (chan == null) {
+			TownyMessaging.sendErrorMsg(player, Translation.of("tc_err_no_channel_called_channel", split[0]));
+			return;
+		}
+
 		if (chan.isSoundMuted(player)) {
 			chan.unmuteSound(player);
-			TownyMessaging.sendMessage(player, Translation.of("tc_player_channel_sound_unmuted"));
+			TownyMessaging.sendMessage(player, Translatable.of("tc_player_channel_sound_unmuted"));
 		} else {
 			chan.muteSound(player);
-			TownyMessaging.sendMessage(player, Translation.of("tc_player_channel_sound_muted"));
+			TownyMessaging.sendMessage(player, Translatable.of("tc_player_channel_sound_muted"));
 		}
 	}
 }
