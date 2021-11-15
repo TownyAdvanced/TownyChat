@@ -403,7 +403,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 		Channel chan = plugin.getChannelsHandler().getChannel(split[0]);
 
 		if (chan == null) {
-			TownyMessaging.sendErrorMsg(player, Translation.of("tc_err_no_channel_called_channel", split[0]));
+			TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_no_channel_called_channel", split[0]));
 			return;
 		}
 
