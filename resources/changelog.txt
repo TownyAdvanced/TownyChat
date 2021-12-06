@@ -387,3 +387,5 @@ v0.91:
   - Minimum Towny version set to 0.97.2.18.
 v0.92:
   - Handle channelTag being null.
+  - Internalize player channel storage.
+  - Repurpose the display modes on join ChatConfig setting, not displays the channel join message.

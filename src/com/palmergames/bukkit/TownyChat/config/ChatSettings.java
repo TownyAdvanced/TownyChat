@@ -249,7 +249,7 @@ public class ChatSettings extends tag_formats {
 	/**
 	 * @return the display_modes_set_on_join setting
 	 */
-	public static boolean getDisplayeModesSetOnJoin() {
+	public static boolean getShowChannelMessageOnServerJoin() {
 		return display_modes_set_on_join;
 	}
 

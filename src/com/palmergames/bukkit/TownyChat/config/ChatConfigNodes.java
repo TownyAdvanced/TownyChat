@@ -163,11 +163,11 @@ public enum ChatConfigNodes {
     		"modify_chat.alone_message_string",
     		"No one in range can hear you or you are alone in this channel.",
     	    "# This allows you to set your alone message."),
-    DISPLAY_MODES_SET_ON_JOIN(
-    		"display_modes_set_on_join",
+    DISPLAY_CHANNEL_JOIN_MESSAGE_ON_JOIN(
+    		"display_channel_join_message_on_joining_the_server",
     		"true",
     		"",
-    		"# If true players will see [Towny] Modes set: general when they log in."),    
+    		"# If true players will see You have joined channel {channel} message on joining the server."),    
     WORLDS("worlds","","");
 	
 

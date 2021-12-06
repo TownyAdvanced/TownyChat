@@ -17,6 +17,7 @@ import com.palmergames.bukkit.util.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -27,6 +28,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Chat plugin to manage all Towny chat
@@ -51,7 +55,7 @@ public class Chat extends JavaPlugin {
 	public static boolean usingEssentialsDiscord = false;
 	boolean chatConfigError = false;
 	boolean channelsConfigError = false;
-
+	private static ConcurrentMap<UUID, Channel> playerChannelMap = new ConcurrentHashMap<>();
 
 	@Override
 	public void onEnable() {
@@ -240,5 +244,13 @@ public class Chat extends JavaPlugin {
 
 	public TownyChatPlayerListener getTownyPlayerListener() {
 		return TownyPlayerListener;
+	}
+	
+	public Channel getPlayerChannel(Player player) {
+		return playerChannelMap.get(player.getUniqueId());
+	}
+	
+	public void setPlayerChannel(Player player, Channel channel) {
+		playerChannelMap.put(player.getUniqueId(), channel);
 	}
 }

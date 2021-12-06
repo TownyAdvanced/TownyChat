@@ -4,7 +4,6 @@ import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.channelTypes;
 import com.palmergames.bukkit.TownyChat.events.PlayerJoinChatChannelEvent;
-import com.palmergames.bukkit.TownyChat.util.TownyUtil;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.command.BaseCommand;
 import com.palmergames.bukkit.towny.object.Translatable;
@@ -327,19 +326,16 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 
 		// Find what the next channel is if any
 		Channel nextChannel = null;
-		if (plugin.getTowny().hasPlayerMode(player, chan.getName())) {
-			if (plugin.getChannelsHandler().getDefaultChannel() != null && plugin.getChannelsHandler().getDefaultChannel().isPresent(player.getName())) {
-				nextChannel = plugin.getChannelsHandler().getDefaultChannel();
-				TownyUtil.removeAndSetPlayerMode(plugin.getTowny(), player, chan.getName(), nextChannel.getName(), true);
-			}
-		}
-		if (nextChannel == null) {
+		if (plugin.getChannelsHandler().getDefaultChannel() != null && plugin.getChannelsHandler().getDefaultChannel().isPresent(player.getName()))
+			nextChannel = plugin.getChannelsHandler().getDefaultChannel();
+
+		if (nextChannel == null)
 			nextChannel = plugin.getChannelsHandler().getActiveChannel(player, channelTypes.GLOBAL);
-		}
 
 		// If the new channel is not us, announce it
 		if (nextChannel != null && !chan.getName().equalsIgnoreCase(nextChannel.getName())) {
 			TownyMessaging.sendMessage(player, Translation.of("tc_you_are_now_talking_in_channel",nextChannel.getName()));
+			plugin.setPlayerChannel(player, nextChannel);
 		}
 	}
 

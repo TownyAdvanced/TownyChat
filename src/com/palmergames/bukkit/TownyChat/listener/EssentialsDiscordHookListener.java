@@ -37,7 +37,7 @@ public class EssentialsDiscordHookListener implements Listener {
     }
 
     for (Channel curChannel : plugin.getChannelsHandler().getAllChannels().values()) {
-      if (plugin.getTowny().hasPlayerMode(event.getPlayer(), curChannel.getName())) {
+      if (plugin.getPlayerChannel(event.getPlayer()).getName().equals(curChannel.getName())) {
         event.setCancelled( curChannel.getType() != channelTypes.GLOBAL || curChannel.getRange() != -1);
         return;
       }

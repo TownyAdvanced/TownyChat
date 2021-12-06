@@ -6,7 +6,6 @@ import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.channelTypes;
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
-import com.palmergames.bukkit.TownyChat.tasks.onPlayerJoinTask;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
@@ -47,9 +46,9 @@ public class TownyChatPlayerListener implements Listener  {
 
 		Channel channel = plugin.getChannelsHandler().getDefaultChannel();
 		if (channel != null &&  player.hasPermission(channel.getPermission())) {
-			// Schedule it as delayed task because Towny may not have processed this just yet
-			// and would reset the mode otherwise
-			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new onPlayerJoinTask(plugin, player, channel), 5);
+			plugin.setPlayerChannel(player, channel);
+			if (ChatSettings.getShowChannelMessageOnServerJoin())
+				TownyMessaging.sendMessage(player, String.format(Translation.of("tc_you_are_now_talking_in_channel"), channel.getName()));
 		}
 	}
 
@@ -142,29 +141,28 @@ public class TownyChatPlayerListener implements Listener  {
 			/*
 			 * Check the player for any channel modes.
 			 */
-			for (Channel channel : plugin.getChannelsHandler().getAllChannels().values()) {
-				if (plugin.getTowny().hasPlayerMode(player, channel.getName())) {
-					// Notify player he is muted
-					if (channel.isMuted(player.getName())) {
-						TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
-						event.setCancelled(true);
-						return;
-					}
-					if (channel.isSpam(player)) {
-						event.setCancelled(true);
-						return;
-					}
-					/*
-					 *  Channel Chat mode set
-					 *  Process the chat
-					 */
-					channel.chatProcess(event);
+			Channel channel = plugin.getChannelsHandler().getChannel(plugin.getPlayerChannel(player).getName());
+			if (channel != null) {
+				// Notify player he is muted
+				if (channel.isMuted(player.getName())) {
+					TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
+					event.setCancelled(true);
 					return;
 				}
+				if (channel.isSpam(player)) {
+					event.setCancelled(true);
+					return;
+				}
+				/*
+				 *  Channel Chat mode set
+				 *  Process the chat
+				 */
+				channel.chatProcess(event);
+				return;
 			}
 			
 			// Find a global channel this player has permissions for.
-			Channel channel = plugin.getChannelsHandler().getActiveChannel(player, channelTypes.GLOBAL);
+			channel = plugin.getChannelsHandler().getActiveChannel(player, channelTypes.GLOBAL);
 					
 			if (channel != null) {
 				// Notify player he is muted

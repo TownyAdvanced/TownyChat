@@ -8,7 +8,6 @@ import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.object.Translation;
 import com.palmergames.util.StringMgmt;
 
-import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -36,7 +35,7 @@ public class ChannelJoinAliasCommand extends BukkitCommand {
 					message = StringMgmt.join(args, " ");
 				}
 				if (message.isEmpty()) {
-					if (plugin.getTowny().hasPlayerMode(player, channel.getName())) {
+					if (plugin.getPlayerChannel(player).getName().equals(channel.getName())) {
 						TownyMessaging.sendMessage(player, String.format(Translation.of("tc_you_are_already_in_channel"), channel.getName()));
 						return true;
 					} else {
@@ -51,20 +50,7 @@ public class ChannelJoinAliasCommand extends BukkitCommand {
 							return true;
 						}
 						
-						// Add channel we're moving to.
-						ArrayList<String> newModes = new ArrayList<String>();
-						newModes.add(channel.getName());
-						
-						// Add modes the player already had, except not any current chat channels.
-						for (String existingMode : plugin.getTowny().getPlayerMode(player))
-							if (!plugin.getChannelsHandler().isChannel(existingMode))
-								newModes.add(existingMode);
-						
-						String[] modes = new String[newModes.size()];
-						for (int i = 0; i < newModes.size(); i++)
-							modes[i] = newModes.get(i);
-							
-						plugin.getTowny().setPlayerMode(player, modes, false);
+						plugin.setPlayerChannel(player, channel);
 						TownyMessaging.sendMessage(player, String.format(Translation.of("tc_you_are_now_talking_in_channel"), channel.getName()));
 						Bukkit.getPluginManager().callEvent(new PlayerJoinChatChannelEvent(player, channel));
 						return true;
