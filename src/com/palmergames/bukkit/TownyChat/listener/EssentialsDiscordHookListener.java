@@ -29,7 +29,7 @@ public class EssentialsDiscordHookListener implements Listener {
       if (event.isCancelled()) {
         return;
       }
-      Channel channel = plugin.getChannelsHandler().getChannel(event.getPlayer(), directChat);
+      Channel channel = plugin.getChannelsHandler().getChannel(directChat);
       if (channel != null) {
         event.setCancelled(channel.getType() != channelTypes.GLOBAL || channel.getRange() != -1);
         return;

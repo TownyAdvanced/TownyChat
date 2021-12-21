@@ -71,7 +71,7 @@ public class ChannelJoinAliasCommand extends BukkitCommand {
 						return true;
 					}
 
-					plugin.getTownyPlayerListener().directedChat.put(player, this.getName());
+					plugin.getTownyPlayerListener().directedChat.put(player, channel.getName().toLowerCase());
 
 					final String msg = message;
 

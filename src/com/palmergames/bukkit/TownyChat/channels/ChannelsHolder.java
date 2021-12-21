@@ -59,7 +59,7 @@ public class ChannelsHolder {
 		if (isChannel(chan.getName()))
 			channels.remove(chan);
 			
-		channels.put(chan.getName(), chan);
+		channels.put(chan.getName().toLowerCase(), chan);
 	}
 	
 	public boolean isChannel(String channelName) {
@@ -69,26 +69,6 @@ public class ChannelsHolder {
 	public Channel getChannel(String channelName) {
 		return channels.get(channelName.toLowerCase());
 	}
-	
-	/**
-	 * Get the relevant channel for this command
-	 * if the player is permitted to use it.
-	 * 
-	 * @param player
-	 * @param command
-	 * @return channel or null if not permitted
-	 */
-	public Channel getChannel(Player player, String command) {
-		
-		for (Channel channel: channels.values()) {
-			if (channel.getCommands().contains(command.toLowerCase())) {
-				if (TownyUniverse.getInstance().getPermissionSource().has(player, channel.getPermission()) || (channel.getPermission().isEmpty())) 
-					return channel;				
-			}
-		}
-		return null;
-	}
-	
 	
 	/**
 	 * Find a channel we are able to talk in, and have not left, starting with the greatest range.

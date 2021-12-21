@@ -390,7 +390,7 @@ public class StandardChannel extends Channel {
 		// Compile the list of recipients with spy perms
 		for (Player test : plugin.getServer().getOnlinePlayers()) {
         	
-        	if ((plugin.getTowny().hasPlayerMode(test, "spy")) && !(recipients.contains(test))) {
+        	if (plugin.getTowny().hasPlayerMode(test, "spy") && !(recipients.contains(test))) {
         		recipients.add(test);
         	}
 
