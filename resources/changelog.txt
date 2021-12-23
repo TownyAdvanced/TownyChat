@@ -389,3 +389,4 @@ v0.92:
   - Handle channelTag being null.
   - Internalize player channel storage.
   - Repurpose the display modes on join ChatConfig setting, not displays the channel join message.
+  - Fix for Spigot 1.18.1 config enabling comments by default.

@@ -66,7 +66,6 @@ public class TownyChatPlayerListener implements Listener  {
 		if (event.isCancelled()) return;
 		
 		Player player = event.getPlayer();
-		boolean debug = plugin.getTowny().hasPlayerMode(player, "debug");
 		
 		if (event.getMessage().contains("&L") || event.getMessage().contains("&l") ||
 			event.getMessage().contains("&O") || event.getMessage().contains("&o") ||
@@ -115,8 +114,6 @@ public class TownyChatPlayerListener implements Listener  {
 			 * If this was directed chat send it via the relevant channel
 			 */
 			if (directedChat.containsKey(player)) {
-				if (debug) player.sendMessage("01 Player in directedChat.");
-				
 				Channel channel = plugin.getChannelsHandler().getChannel(directedChat.get(player));
 				
 				if (channel != null) {
@@ -133,14 +130,11 @@ public class TownyChatPlayerListener implements Listener  {
 						return;
 					}
 					channel.chatProcess(event);
-					if (debug) player.sendMessage("02 Player in directedChat - Channel used: " + channel.getName());
 					if (!Chat.usingEssentialsDiscord || event.isCancelled()) {
 						directedChat.remove(player);
-						if (debug) player.sendMessage("03 Player in directed chat - Removed from directedChat.");
 					}
 					return;
 				}
-				if (debug) player.sendMessage("04 Player in directed chat - Channel null, removed from directedChat.");
 				directedChat.remove(player);
 			}
 			
@@ -149,7 +143,6 @@ public class TownyChatPlayerListener implements Listener  {
 			 */
 			Channel channel = plugin.getChannelsHandler().getChannel(plugin.getPlayerChannel(player).getName());
 			if (channel != null) {
-				if (debug) player.sendMessage("01 Player in channel: " + channel.getName());
 				// Notify player he is muted
 				if (channel.isMuted(player.getName())) {
 					TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
@@ -165,7 +158,6 @@ public class TownyChatPlayerListener implements Listener  {
 				 *  Process the chat
 				 */
 				channel.chatProcess(event);
-				if (debug) player.sendMessage("02 Player in channel: " + channel.getName() + ", chat processed.");
 				return;
 			}
 			
@@ -173,7 +165,6 @@ public class TownyChatPlayerListener implements Listener  {
 			channel = plugin.getChannelsHandler().getActiveChannel(player, channelTypes.GLOBAL);
 					
 			if (channel != null) {
-				if (debug) player.sendMessage("01 Player had to find ActiveChannel: " + channel.getName());
 				// Notify player he is muted
 				if (channel.isMuted(player.getName())) {
 					TownyMessaging.sendErrorMsg(player, String.format(Translation.of("tc_err_you_are_currently_muted_in_channel"), channel.getName()));
@@ -185,7 +176,6 @@ public class TownyChatPlayerListener implements Listener  {
 					return;
 				}
 				channel.chatProcess(event);
-				if (debug) player.sendMessage("02 Player had to find ActiveChannel: " + channel.getName() + ", chat processed.");
 				return;
 			}
 		}
@@ -194,7 +184,6 @@ public class TownyChatPlayerListener implements Listener  {
 		 * We found no channels available so modify the chat (if enabled) and exit.
 		 */
 		if (ChatSettings.isModify_chat()) {
-			if (debug) player.sendMessage("01 Player could find no channel, modify chat with global format.");
 			event.setFormat(ChatSettings.getRelevantFormatGroup(player).getGLOBAL().replace("{channelTag}", "").replace("{msgcolour}", ""));
 			Resident resident = TownyUniverse.getInstance().getResident(player.getUniqueId()); 
 

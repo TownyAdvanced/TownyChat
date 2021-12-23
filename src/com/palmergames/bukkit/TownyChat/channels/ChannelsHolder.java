@@ -70,6 +70,9 @@ public class ChannelsHolder {
 		return channels.get(channelName.toLowerCase());
 	}
 	
+	public Map<String, Channel> getChannels() {
+		return channels;
+	}
 	/**
 	 * Find a channel we are able to talk in, and have not left, starting with the greatest range.
 	 * 

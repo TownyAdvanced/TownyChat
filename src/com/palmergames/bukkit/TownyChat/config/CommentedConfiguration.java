@@ -60,7 +60,13 @@ public class CommentedConfiguration extends YamlConfiguration {
 	}
 
 	public boolean save() {
-
+		
+		try {
+			// Spigot 1.18.1 added SnakeYaml's ability to use Comments in yaml.
+			// They have it enabled by default, we need to stop it happening.
+			yamlOptions.setProcessComments(false);
+		} catch (NoSuchMethodError ignored) {}
+		
 		boolean saved = true;
 
 		// Save the config just like normal
@@ -250,6 +256,7 @@ public class CommentedConfiguration extends YamlConfiguration {
         }
     }
 	
+	@SuppressWarnings("deprecation")
 	@Override
     public String saveToString() {
         yamlOptions.setIndent(options().indent());        
