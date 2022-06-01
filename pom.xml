@@ -74,8 +74,7 @@
         <dependency>
             <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.97.5.0</version>
-            <scope>provided</scope>
+            <version>feature~minimessage-support-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>

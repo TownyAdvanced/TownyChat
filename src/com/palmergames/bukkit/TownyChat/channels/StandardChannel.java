@@ -1,6 +1,7 @@
 package com.palmergames.bukkit.TownyChat.channels;
 
 import com.earth2me.essentials.User;
+import com.palmergames.adventure.text.format.NamedTextColor;
 import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.HexFormatter;
 import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
@@ -178,7 +179,7 @@ public class StandardChannel extends Channel {
 
 
         if (notifyjoin) {
-			TownyMessaging.sendMessage(player, "You join " + Colors.White + getName());
+			TownyMessaging.sendMessage(player, "You join " + NamedTextColor.WHITE + getName());
         }
 
         /*
@@ -358,8 +359,7 @@ public class StandardChannel extends Channel {
 		Nation nation = TownyAPI.getInstance().getResidentNationOrNull(resident);
 		
 		String format = ChatColor.translateAlternateColorCodes('&', getChannelTag() != null ? getChannelTag() : getName());
-		if (Towny.is116Plus())
-			format = HexFormatter.translateHexColors(format);
+		format = HexFormatter.translateHexColors(format);
 		
 		switch (type) {
 			case TOWN:

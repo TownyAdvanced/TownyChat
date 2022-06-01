@@ -1,5 +1,7 @@
 package com.palmergames.bukkit.TownyChat.Command;
 
+import com.palmergames.adventure.text.Component;
+import com.palmergames.adventure.text.format.NamedTextColor;
 import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.channelTypes;
@@ -7,11 +9,8 @@ import com.palmergames.bukkit.TownyChat.events.PlayerJoinChatChannelEvent;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.command.BaseCommand;
 import com.palmergames.bukkit.towny.object.Translatable;
-import com.palmergames.bukkit.towny.object.Translation;
-import com.palmergames.bukkit.towny.object.Translator;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.util.ChatTools;
-import com.palmergames.bukkit.util.Colors;
 import com.palmergames.util.StringMgmt;
 
 import org.bukkit.Bukkit;
@@ -28,7 +27,7 @@ import java.util.Map;
 public class ChannelCommand extends BaseCommand implements CommandExecutor {
 
 	private static Chat plugin;
-	private static final List<String> channel_help = new ArrayList<String>();
+	private static final List<Component> channel_help = new ArrayList<Component>();
 
 	static {
 
@@ -42,6 +41,11 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 		channel_help.add(ChatTools.formatCommand("", "/channel", "mutelist [Channel]", ""));
 		channel_help.add(ChatTools.formatCommand("", "/channel", "soundtoggle [Channel]", ""));
 
+	}
+	
+	private static void sendHelp(CommandSender sender) {
+		for (Component line : channel_help)
+			TownyMessaging.sendMessage(sender, line);
 	}
 
 	public ChannelCommand(Chat instance) {
@@ -79,10 +83,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 			}
 		} else {
 			// Console
-			for (String line : channel_help) {
-				sender.sendMessage(Colors.strip(line));
-				return true;
-			}
+			sendHelp(sender);
 		}
 		return false;
 	}
@@ -90,8 +91,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 	private void parseChannelCommand(Player player, String[] split) {
 		// So they just type /channel , We should probably send them to the help menu..
 		if (split.length == 0 || split[0].equalsIgnoreCase("help") || split[0].equalsIgnoreCase("?")) { 
-			for (String line : channel_help)
-				player.sendMessage(line);
+			sendHelp(player);
 		} else if (split[0].equalsIgnoreCase("join")) { // /channel join [chn] (/label args[0] args[1] length = 2.)
 			parseChannelJoin(player, StringMgmt.remFirstArg(split));
 		} else if (split[0].equalsIgnoreCase("leave")) {
@@ -114,24 +114,22 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 	public static void parseChannelList(Player player) {
 		// If not our command
 		Map<String, Channel> chanList = plugin.getChannelsHandler().getAllChannels();
-		Translator translator = Translator.locale(Translation.getLocale(player));
 
 		TownyMessaging.sendMessage(player, ChatTools.formatTitle("Channels"));
-		TownyMessaging.sendMessage(player, Colors.Gold + "Channel" + Colors.Gray + " - " + Colors.LightBlue + translator.of("tc_channel_list_status"));
+		TownyMessaging.sendMessage(player, Component.text("Channel", NamedTextColor.GOLD)
+			.append(Component.text(" - ", NamedTextColor.DARK_GRAY))
+			.append(Component.text(Translatable.of("tc_channel_list_status").forLocale(player), NamedTextColor.AQUA)));
 		for (Map.Entry<String, Channel> channel : chanList.entrySet()) {
 			if (player.hasPermission(channel.getValue().getPermission()))
-				if (channel.getValue().isPresent(player.getName()))
-					TownyMessaging.sendMessage(player, Colors.Gold + channel.getKey() + Colors.Gray + " - " + Colors.LightBlue + translator.of("tc_channel_list_in"));
-				else
-					TownyMessaging.sendMessage(player, Colors.Gold + channel.getKey() + Colors.Gray + " - " + Colors.LightBlue + translator.of("tc_channel_list_out"));
+				TownyMessaging.sendMessage(player, Component.text(channel.getKey(), NamedTextColor.GOLD)
+					.append(Component.text(" - ", NamedTextColor.DARK_GRAY))
+					.append(Component.text(Translatable.of("tc_channel_list_" + (channel.getValue().isPresent(player.getName()) ? "in" : "out")).forLocale(player), NamedTextColor.AQUA)));
 		}
 	}
 
 	public static void parseChannelMuteList(Player player, String[] split) {
 		if (split.length == 0) {
-			for (String line : channel_help) {
-				player.sendMessage(line);
-			}
+			sendHelp(player);
 			return;
 		}
 		String mutePerm = plugin.getChannelsHandler().getMutePermission();
@@ -176,7 +174,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 			boolean first = true;
 			while (iter.hasNext()) {
 				if (!first) {
-					players += Colors.Green + ", " + Colors.White;
+					players += NamedTextColor.DARK_GREEN + ", " + NamedTextColor.WHITE;
 				}
 				players += iter.next();
 				count++;
@@ -193,9 +191,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 
 	public static void parseChannelMute(Player player, String[] split, boolean mute) {
 		if (split.length < 2) {
-			for (String line : channel_help) {
-				player.sendMessage(line);
-			}
+			sendHelp(player);
 			return;
 		}
 		// Split[0] = Channelname
@@ -276,9 +272,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 
 	public static void parseChannelLeave(Player player, String[] split) {
 		if (split.length == 0) {
-			for (String line : channel_help) {
-				player.sendMessage(line);
-			}
+			sendHelp(player);
 			return;
 		}
 		Channel chan = plugin.getChannelsHandler().getChannel(split[0]);
@@ -340,9 +334,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 
 	public static void parseChannelJoin(Player player, String[] split) {
 		if (split.length == 0) {
-			for (String line : channel_help) {
-				player.sendMessage(line);
-			}
+			sendHelp(player);
 			return;
 		}
 		// Removed first argument of the list so now args[0] is the channel he wants to join
@@ -390,9 +382,7 @@ public class ChannelCommand extends BaseCommand implements CommandExecutor {
 
 	public static void parseChannelSoundToggle(Player player, String[] split) {
 		if (split.length == 0) {
-			for (String line : channel_help) {
-				player.sendMessage(line);
-			}
+			sendHelp(player);
 			return;
 		}
 		Channel chan = plugin.getChannelsHandler().getChannel(split[0]);

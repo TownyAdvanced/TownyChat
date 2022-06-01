@@ -3,7 +3,6 @@ package com.palmergames.bukkit.TownyChat;
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
 import com.palmergames.bukkit.TownyChat.listener.LocalTownyChatEvent;
 import com.palmergames.bukkit.TownyChat.util.StringReplaceManager;
-import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.object.Government;
@@ -204,11 +203,7 @@ public class TownyChatFormatter {
 	}
 
 	public static String hexIfCompatible(String str) {
-		if (Towny.is116Plus()) {
-			return HexFormatter.translateHexColors(str);
-		}
-
-		return str;
+		return HexFormatter.translateHexColors(str);
 	}
 
 	public static String getChatFormat(LocalTownyChatEvent event) {

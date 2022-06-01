@@ -1,5 +1,6 @@
 package com.palmergames.bukkit.TownyChat.Command;
 
+import com.palmergames.adventure.text.Component;
 import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.command.BaseCommand;
@@ -18,7 +19,7 @@ import java.util.List;
 public class TownyChatCommand extends BaseCommand implements CommandExecutor {
 
 	private Chat plugin;
-	private static final List<String> townychat_help = new ArrayList<String>();
+	private static final List<Component> townychat_help = new ArrayList<Component>();
 
 	static {
 
@@ -44,12 +45,12 @@ public class TownyChatCommand extends BaseCommand implements CommandExecutor {
 
 	private void parseTownyChatCommand(CommandSender sender, String[] split) {
 		if (split.length == 0) { // So they just type /channel , We should probably send them to the help menu..
-			for (String line : townychat_help) {
-				sender.sendMessage(line);
+			for (Component line : townychat_help) {
+				TownyMessaging.sendMessage(sender, line);
 			}
 		} else if (split[0].equalsIgnoreCase("help") || split[0].equalsIgnoreCase("?")) {
-			for (String line : townychat_help) {
-				sender.sendMessage(line);
+			for (Component line : townychat_help) {
+				TownyMessaging.sendMessage(sender, line);
 			}
 		} else if (split[0].equalsIgnoreCase("reload")) {
 			plugin.reload();

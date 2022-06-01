@@ -90,7 +90,7 @@ public class ChatSettings extends tag_formats {
 	
 	private static void setWorldDefaults() {
 		if (perWorld()) {
-			for (TownyWorld world : TownyUniverse.getInstance().getDataSource().getWorlds()) {
+			for (TownyWorld world : TownyUniverse.getInstance().getTownyWorlds()) {
 				if (!chatConfig.contains("worlds." + world )
 						|| !chatConfig.contains("worlds." + world + ".global") 
 						|| !chatConfig.contains("worlds." + world + ".town") 
@@ -284,7 +284,7 @@ public class ChatSettings extends tag_formats {
 
 		boolean updated = false;
 
-		for (TownyWorld world : TownyUniverse.getInstance().getDataSource().getWorlds()) {
+		for (TownyWorld world : TownyUniverse.getInstance().getTownyWorlds()) {
 			if (!hasFormatGroup(world.getName())) {
 				addFormatGroup(getFormatGroup("channel_formats").clone(world.getName()));
 				updated = true;
