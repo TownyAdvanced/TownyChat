@@ -2,6 +2,7 @@ package com.palmergames.bukkit.TownyChat;
 
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
 import com.palmergames.bukkit.TownyChat.listener.LocalTownyChatEvent;
+import com.palmergames.bukkit.TownyChat.util.ColorUtil;
 import com.palmergames.bukkit.TownyChat.util.StringReplaceManager;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownySettings;
@@ -202,13 +203,13 @@ public class TownyChatFormatter {
 
 	}
 
-	public static String hexIfCompatible(String str) {
-		return HexFormatter.translateHexColors(str);
+	private static String colorize(String str) {
+		return ColorUtil.translateColors(str);
 	}
 
 	public static String getChatFormat(LocalTownyChatEvent event) {
 		// Replace the {msg} here so it's not regex parsed.
-		return hexIfCompatible(replacer.replaceAll(event.getFormat(), event).replace("{modplayername}", "%1$s").replace("{msg}", "%2$s"));
+		return colorize(replacer.replaceAll(event.getFormat(), event).replace("{modplayername}", "%1$s").replace("{msg}", "%2$s"));
 	}
 
 	/**
@@ -275,11 +276,11 @@ public class TownyChatFormatter {
 		if (resident.hasTown()) {
 			Town town = TownyAPI.getInstance().getResidentTownOrNull(resident);
 			if (full)
-				return hexIfCompatible(String.format(ChatSettings.getTownTag(), getName(town)));
+				return colorize(String.format(ChatSettings.getTownTag(), getName(town)));
 			else if (town.hasTag())
-				return hexIfCompatible(String.format(ChatSettings.getTownTag(), getTag(town)));
+				return colorize(String.format(ChatSettings.getTownTag(), getTag(town)));
 			else if (override)
-				return hexIfCompatible(String.format(ChatSettings.getTownTag(), getName(town)));
+				return colorize(String.format(ChatSettings.getTownTag(), getName(town)));
 
 		}
 		return "";
@@ -289,11 +290,11 @@ public class TownyChatFormatter {
 		if (resident.hasNation()) {
 			Nation nation = TownyAPI.getInstance().getResidentNationOrNull(resident);
 			if (full)
-				return hexIfCompatible(String.format(ChatSettings.getNationTag(), getName(nation)));
+				return colorize(String.format(ChatSettings.getNationTag(), getName(nation)));
 			else if (nation.hasTag())
-				return hexIfCompatible(String.format(ChatSettings.getNationTag(), getTag(nation)));
+				return colorize(String.format(ChatSettings.getNationTag(), getTag(nation)));
 			else if (override)
-				return hexIfCompatible(String.format(ChatSettings.getNationTag(), getName(nation)));
+				return colorize(String.format(ChatSettings.getNationTag(), getName(nation)));
 		}
 		return "";
 	}

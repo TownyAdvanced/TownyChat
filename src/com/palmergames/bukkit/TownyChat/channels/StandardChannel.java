@@ -3,12 +3,12 @@ package com.palmergames.bukkit.TownyChat.channels;
 import com.earth2me.essentials.User;
 import com.palmergames.adventure.text.format.NamedTextColor;
 import com.palmergames.bukkit.TownyChat.Chat;
-import com.palmergames.bukkit.TownyChat.HexFormatter;
 import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
 import com.palmergames.bukkit.TownyChat.events.AsyncChatHookEvent;
 import com.palmergames.bukkit.TownyChat.events.PlayerJoinChatChannelEvent;
 import com.palmergames.bukkit.TownyChat.listener.LocalTownyChatEvent;
+import com.palmergames.bukkit.TownyChat.util.ColorUtil;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
@@ -17,7 +17,6 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.TownyUniverse;
-import com.palmergames.bukkit.util.Colors;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 
@@ -218,8 +217,8 @@ public class StandardChannel extends Channel {
 
 	private String getFormat(String format) {
 		return format
-			.replace("{channelTag}", Colors.translateColorCodes(getChannelTag() != null ? getChannelTag() : ""))
-			.replace("{msgcolour}", Colors.translateColorCodes(getMessageColour() != null ? getMessageColour() : ""));
+			.replace("{channelTag}", ColorUtil.translateColors(getChannelTag() != null ? getChannelTag() : ""))
+			.replace("{msgcolour}", ColorUtil.translateColors(getMessageColour() != null ? getMessageColour() : ""));
 	}
 
 	/**
@@ -312,7 +311,7 @@ public class StandardChannel extends Channel {
         	
 			String aloneMsg = ChatSettings.getUsingAloneMessageString(); 
 			if (Towny.is116Plus())
-				aloneMsg = HexFormatter.translateHexColors(aloneMsg);
+				aloneMsg = ColorUtil.translateColors(aloneMsg);
         	
         	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', aloneMsg));
         }
@@ -359,7 +358,7 @@ public class StandardChannel extends Channel {
 		Nation nation = TownyAPI.getInstance().getResidentNationOrNull(resident);
 		
 		String format = ChatColor.translateAlternateColorCodes('&', getChannelTag() != null ? getChannelTag() : getName());
-		format = HexFormatter.translateHexColors(format);
+		format = ColorUtil.translateColors(format);
 		
 		switch (type) {
 			case TOWN:

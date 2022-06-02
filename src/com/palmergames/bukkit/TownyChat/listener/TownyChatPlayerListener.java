@@ -1,11 +1,11 @@
 package com.palmergames.bukkit.TownyChat.listener;
 
 import com.palmergames.bukkit.TownyChat.Chat;
-import com.palmergames.bukkit.TownyChat.HexFormatter;
 import com.palmergames.bukkit.TownyChat.TownyChatFormatter;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.channelTypes;
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
+import com.palmergames.bukkit.TownyChat.util.ColorUtil;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
@@ -106,7 +106,7 @@ public class TownyChatPlayerListener implements Listener  {
 		if(player.hasPermission("townychat.chat.color")) {
 			event.setMessage(ChatColor.translateAlternateColorCodes('&', event.getMessage()));
 
-			event.setMessage(HexFormatter.translateHexColors(event.getMessage()));
+			event.setMessage(ColorUtil.translateColors(event.getMessage()));
 		}
 		
 		// Check if essentials has this player muted.
@@ -191,7 +191,7 @@ public class TownyChatPlayerListener implements Listener  {
 
 			LocalTownyChatEvent chatEvent = new LocalTownyChatEvent(event, resident);
 
-			event.setFormat(HexFormatter.translateHexColors(TownyChatFormatter.getChatFormat(chatEvent)));
+			event.setFormat(ColorUtil.translateColors(TownyChatFormatter.getChatFormat(chatEvent)));
 		}
 	}
 	

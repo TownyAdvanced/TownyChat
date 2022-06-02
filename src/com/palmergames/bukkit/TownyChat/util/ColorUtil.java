@@ -1,17 +1,17 @@
-package com.palmergames.bukkit.TownyChat;
+package com.palmergames.bukkit.TownyChat.util;
 
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HexFormatter {
+public class ColorUtil {
 
     public static final Pattern hexPattern = Pattern.compile("(?<!\\\\)(#[a-fA-F0-9]{6})");
     public static final Pattern ampersandPattern = Pattern.compile("(?<!\\\\)(&#[a-fA-F0-9]{6})");
     public static final Pattern bracketPattern = Pattern.compile("(?<!\\\\)\\{(#[a-fA-F0-9]{6})}");
 
-    public static String translateHexColors(String str) {
+    public static String translateColors(String str) {
         final Matcher hexMatcher = hexPattern.matcher(str);
         final Matcher ampMatcher = ampersandPattern.matcher(str);
         final Matcher bracketMatcher = bracketPattern.matcher(str);
