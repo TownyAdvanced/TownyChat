@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UnknownFormatConversionException;
 import java.util.stream.Collectors;
 
 public class StandardChannel extends Channel {
@@ -75,18 +76,17 @@ public class StandardChannel extends Channel {
 		// Try sending an alone message if it is called for.
 		trySendingAloneMessage(player, recipients);
 
+		// format is left to store the original non-PAPI-parsed chat format.
+		String newFormat = format;
 		// Parse any PAPI placeholders.
 		if (Chat.usingPlaceholderAPI)
-			format = PlaceholderAPI.setPlaceholders(player, format);
+			newFormat = PlaceholderAPI.setPlaceholders(player, format);
 
 		/*
 		 * Only modify GLOBAL channelType chat (general and local chat channels) if isModifyChat() is true.
 		 */
-		if (!(channelType.equals(channelTypes.GLOBAL) && !ChatSettings.isModify_chat())) {
-			event.setFormat(parseTagAndMsgColour(format));
-			LocalTownyChatEvent chatEvent = new LocalTownyChatEvent(event, resident);
-			event.setFormat(TownyChatFormatter.getChatFormat(chatEvent));
-		}
+		if (!(channelType.equals(channelTypes.GLOBAL) && !ChatSettings.isModify_chat()))
+			applyFormats(event, format, newFormat, resident);
 
 		/*
 		 *  Set recipients for Bukkit to send this message to.
@@ -195,10 +195,50 @@ public class StandardChannel extends Channel {
 			sender.sendMessage(Colors.translateColorCodes(ChatSettings.getUsingAloneMessageString()));
 	}
 
+	private void applyFormats(AsyncPlayerChatEvent event, String originalFormat, String workingFormat, Resident resident) {
+		// Parse out our own channelTag and msgcolour tags.
+		String newFormat = parseTagAndMsgColour(workingFormat);
+		// Attempt to apply the new format.
+		catchFormatConversionException(event, originalFormat, newFormat);
+		
+		// Fire the LocalTownyChatEvent.
+		LocalTownyChatEvent chatEvent = new LocalTownyChatEvent(event, resident);
+		// Format the chat line, replacing the TownyChat chat tags.
+		newFormat = TownyChatFormatter.getChatFormat(chatEvent);
+		// Attempt to apply the new format.
+		catchFormatConversionException(event, originalFormat, newFormat);
+	}
+
 	private String parseTagAndMsgColour(String format) {
 		return format
 			.replace("{channelTag}", Colors.translateColorCodes(getChannelTag() != null ? getChannelTag() : ""))
 			.replace("{msgcolour}", Colors.translateColorCodes(getMessageColour() != null ? getMessageColour() : ""));
+	}
+
+	private void catchFormatConversionException(AsyncPlayerChatEvent event, String format, String newFormat) {
+		try {
+			event.setFormat(newFormat);
+		} catch (UnknownFormatConversionException e) {
+			// This exception is usually thrown when a PAPI placeholder did not get parsed
+			// and has left behind a % symbol followed by something that String#format
+			// cannot handle.
+			boolean percentSymbol = format.contains("%" + e.getConversion());
+			String errmsg = "TownyChat tried to apply a chat format that is not allowed: '" +
+					newFormat + "', because of the " + e.getConversion() + " symbol" +
+					(percentSymbol ? ", found after a %. There is probably a PAPIPlaceholder that could not be parsed." : ".");
+			Chat.getTownyChat().getLogger().severe(errmsg);
+
+			if (percentSymbol)
+				// Attempt to remove the unparsed placeholder and send this right back.
+				catchFormatConversionException(event, format, purgePAPI(newFormat, "%" + e.getConversion()));
+			else
+				// Just let the chat go, this results in an error in the log, and TownyChat not being able to format chat.
+				event.setFormat(format);
+		}
+	}
+
+	private String purgePAPI(String format, String startOfPlaceholder) {
+		return format.replaceAll(startOfPlaceholder + ".*%", "");
 	}
 
 	/**
