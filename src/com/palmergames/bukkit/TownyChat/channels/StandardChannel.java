@@ -225,7 +225,8 @@ public class StandardChannel extends Channel {
 			boolean percentSymbol = format.contains("%" + e.getConversion());
 			String errmsg = "TownyChat tried to apply a chat format that is not allowed: '" +
 					newFormat + "', because of the " + e.getConversion() + " symbol" +
-					(percentSymbol ? ", found after a %. There is probably a PAPIPlaceholder that could not be parsed." : ".");
+					(percentSymbol ? ", found after a %. There is probably a PAPIPlaceholder that could not be parsed." : "." +
+					" You should attempt to correct this in your towny\\settings\\chatconfig.yml file and use /townychat reload.");
 			Chat.getTownyChat().getLogger().severe(errmsg);
 
 			if (percentSymbol)
