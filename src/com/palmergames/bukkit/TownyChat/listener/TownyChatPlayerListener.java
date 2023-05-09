@@ -39,7 +39,7 @@ public class TownyChatPlayerListener implements Listener  {
 	@EventHandler(priority = EventPriority.LOW)
 	public void onPlayerJoin(final PlayerJoinEvent event) {
 		
-		Bukkit.getScheduler().runTaskLater(plugin, () -> loginPlayer(event.getPlayer()), 2l);
+		plugin.getScheduler().runLater(event.getPlayer(), () -> loginPlayer(event.getPlayer()), 2L);
 
 	}
 

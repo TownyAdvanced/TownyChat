@@ -13,6 +13,9 @@ import com.palmergames.bukkit.TownyChat.listener.TownyChatPlayerListener;
 import com.palmergames.bukkit.TownyChat.tasks.onLoadedTask;
 import com.palmergames.bukkit.TownyChat.util.EssentialsIntegration;
 import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.scheduling.TaskScheduler;
+import com.palmergames.bukkit.towny.scheduling.impl.BukkitTaskScheduler;
+import com.palmergames.bukkit.towny.scheduling.impl.FoliaTaskScheduler;
 import com.palmergames.bukkit.util.Version;
 import com.palmergames.util.FileMgmt;
 
@@ -51,6 +54,7 @@ public class Chat extends JavaPlugin {
 	
 	protected PluginManager pm;
 	private static Chat chat = null;
+	private final TaskScheduler scheduler;
 	private Towny towny = null;
 	private DynmapAPI dynMap = null;
 	private Essentials essentials = null;
@@ -62,10 +66,13 @@ public class Chat extends JavaPlugin {
 	boolean channelsConfigError = false;
 	private static ConcurrentMap<UUID, Channel> playerChannelMap;
 
+	public Chat() {
+		chat = this;
+		this.scheduler = isFoliaClassPresent() ? new FoliaTaskScheduler(this) : new BukkitTaskScheduler(this);
+	}
+
 	@Override
 	public void onEnable() {
-		
-		chat = this;
 		pm = getServer().getPluginManager();
 		channelsConfig = new ChannelConfigurationHandler(this);
 		channels = new ChannelsHolder(this);
@@ -89,14 +96,7 @@ public class Chat extends JavaPlugin {
 		 * This executes the task with a 1 tick delay avoiding the bukkit depends bug.
 		 * TODO: What bug is this referencing? This goes back to the first version of TownyChat.
 		 */
-		if (getServer().getScheduler().scheduleSyncDelayedTask(this, new onLoadedTask(this), 1) == -1) {
-			/*
-			 * We either failed to find Towny or the Scheduler failed to
-			 * register the task.
-			 */
-			disableWithMessage("Could not schedule onLoadedTask.");
-			return;
-		}
+		scheduler.run(new onLoadedTask(this));
 
 		getCommand("townychat").setExecutor(new TownyChatCommand(this));
 		getCommand("channel").setExecutor(new ChannelCommand(this));
@@ -299,5 +299,18 @@ public class Chat extends JavaPlugin {
 	
 	public void setPlayerChannel(Player player, Channel channel) {
 		playerChannelMap.put(player.getUniqueId(), channel);
+	}
+
+	public TaskScheduler getScheduler() {
+		return this.scheduler;
+	}
+
+	private static boolean isFoliaClassPresent() {
+		try {
+			Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
 	}
 }

@@ -8,6 +8,7 @@ description: >
     TownyChat plugin which hooks into Towny.
 depend: [Towny]
 softdepend: [CraftIRC, PlaceholderAPI, dynmap, EssentialsDiscord]
+folia-supported: true
 
 ############################################################
 # +------------------------------------------------------+ #

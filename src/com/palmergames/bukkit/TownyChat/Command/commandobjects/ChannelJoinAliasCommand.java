@@ -5,6 +5,7 @@ import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.events.PlayerJoinChatChannelEvent;
 import com.palmergames.bukkit.towny.TownyMessaging;
 import com.palmergames.bukkit.towny.object.Translatable;
+import com.palmergames.bukkit.towny.scheduling.TaskScheduler;
 import com.palmergames.bukkit.util.Colors;
 import com.palmergames.util.StringMgmt;
 
@@ -75,8 +76,9 @@ public class ChannelJoinAliasCommand extends BukkitCommand {
 					final String msg = message;
 
 					// https://www.spigotmc.org/threads/plugins-triggering-commands-async.31815/
-					if (!Bukkit.isPrimaryThread()) {
-						Bukkit.getScheduler().runTask(plugin, () -> player.chat(msg));
+					TaskScheduler scheduler = plugin.getScheduler();
+					if (!scheduler.isEntityThread(player)) {
+						scheduler.run(player, () -> player.chat(msg));
 					} else {
 						player.chat(msg);
 					}
