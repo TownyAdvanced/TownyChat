@@ -448,3 +448,6 @@ v0.104:
   - Update EssentialsX maven details.
   - Translate spy message colour codes.
     - Closes https://github.com/TownyAdvanced/Towny/issues/6634
+v0.105:
+  - Add Folia support, courtesy of Warrior with PR #46.
+  - Update min. Towny version to 0.99.0.6.

@@ -59,7 +59,7 @@ public class Chat extends JavaPlugin {
 	private DynmapAPI dynMap = null;
 	private Essentials essentials = null;
 	
-	private static Version requiredTownyVersion = Version.fromString("0.99.0.0");
+	private static Version requiredTownyVersion = Version.fromString("0.99.0.6");
 	public static boolean usingPlaceholderAPI = false;
 	public static boolean usingEssentialsDiscord = false;
 	boolean chatConfigError = false;
