@@ -25,6 +25,7 @@ public abstract class Channel {
 	private double range;
 	private boolean hooked=false;
 	private boolean autojoin=true;
+	private boolean focusable = true;
 	private double spamtime;
 	private WeakHashMap<Player, Long> spammers = new WeakHashMap<>();
 	protected ConcurrentMap<String, Integer> absentPlayers = null;  
@@ -261,6 +262,12 @@ public abstract class Channel {
 		return autojoin;
 	}
 
+	public boolean isFocusable() {
+		return focusable;
+	}
+	public void setFocusable(boolean focusable) {
+		this.focusable = focusable;
+	}
 	public double getSpam_time() {
 		return spamtime;
 	}

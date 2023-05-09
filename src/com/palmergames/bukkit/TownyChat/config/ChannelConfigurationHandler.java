@@ -107,6 +107,16 @@ public class ChannelConfigurationHandler {
 					}
 				}
 
+				if (key.equalsIgnoreCase("focusable")) {
+					if (element instanceof Boolean) {
+						channel.setFocusable((Boolean)element);
+					} else if (element instanceof String) {
+						channel.setFocusable(Boolean.parseBoolean(element.toString()));
+					} else if (element instanceof Integer) {
+						channel.setFocusable(Integer.parseInt(element.toString()) != 0);
+					}
+				}
+
 				if (key.equalsIgnoreCase("default")) {
 					boolean set = false;
 					if (element instanceof Boolean) {

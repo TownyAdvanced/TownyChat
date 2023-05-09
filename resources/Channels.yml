@@ -24,6 +24,11 @@
 #	  0 = same world only
 #	  any positive value = limited range in the same world.
 
+# focusable is a setting which allows players to set their focused channel, 
+# ie: using the /tc command with no message. Channels are focusable by default,
+# so there is no point to adding focusable: true. You make a channel un-focusable
+# by adding focusable: false.
+
 # Text colouring
 # --------------
 # Black = &0, Navy = &1, Green = &2, Blue = &3, Red = &4

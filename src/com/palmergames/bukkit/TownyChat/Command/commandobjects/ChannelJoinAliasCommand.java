@@ -46,7 +46,8 @@ public class ChannelJoinAliasCommand extends BukkitCommand {
 						// - channel has no permission set [by default they don't] OR
 						//   - channel has permission set AND:
 						//     - player has channel permission
-						if (!channel.hasPermission(player)) {
+						// - the Channel is designated as being joinable (which they are by default.)
+						if (!channel.hasPermission(player) || !channel.isFocusable()) {
 							TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_you_cannot_join_channel", channel.getName()));
 							return true;
 						}
