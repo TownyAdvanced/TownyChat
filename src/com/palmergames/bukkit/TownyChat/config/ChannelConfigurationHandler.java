@@ -152,6 +152,14 @@ public class ChannelConfigurationHandler {
 					if (element instanceof String)
 						channel.setLeavePermission(element.toString());
 
+				if (key.equalsIgnoreCase("listenpermission"))
+					if (element instanceof String)
+						channel.setListenPermission(element.toString());
+
+				if (key.equalsIgnoreCase("speakpermission"))
+					if (element instanceof String)
+						channel.setSpeakPermission(element.toString());
+
 				if (key.equalsIgnoreCase("range"))
 					channel.setRange(Double.valueOf(element.toString()));
 

@@ -151,7 +151,7 @@ public class StandardChannel extends Channel {
 		// Refresh the potential channels a player can see, if they are not currently in the channel.
 		playerList.stream().forEach(p -> refreshPlayer(this, p));
 		return playerList.stream()
-				.filter(p -> hasPermission(p)) // Check permission.
+				.filter(p -> hasListenPermission(p)) // Check permission.
 				.filter(p -> testDistance(sender, p, getRange())) // Within range.
 				.filter(p -> !plugin.isIgnoredByEssentials(sender, p)) // Check essentials ignore.
 				.filter(p -> !isAbsent(p.getName())) // Check if player is purposefully absent.

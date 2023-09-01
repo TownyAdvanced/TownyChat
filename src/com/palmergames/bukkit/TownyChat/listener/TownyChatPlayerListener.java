@@ -48,7 +48,7 @@ public class TownyChatPlayerListener implements Listener  {
 		refreshPlayerChannels(player);
 
 		Channel channel = plugin.getChannelsHandler().getDefaultChannel();
-		if (channel != null &&  channel.hasPermission(player)) {
+		if (channel != null && channel.hasSpeakPermission(player)) {
 			plugin.setPlayerChannel(player, channel);
 			if (ChatSettings.getShowChannelMessageOnServerJoin())
 				TownyMessaging.sendMessage(player, Translatable.of("tc_you_are_now_talking_in_channel", channel.getName()));
@@ -100,7 +100,7 @@ public class TownyChatPlayerListener implements Listener  {
 			 * Check the player for any channel modes.
 			 */
 			Channel channel = plugin.getPlayerChannel(player);
-			if (!forceGlobal && channel != null && channel.hasPermission(player)) {
+			if (!forceGlobal && channel != null && channel.hasSpeakPermission(player)) {
 				if (isMutedOrSpam(event, channel, player))
 					return;
 				channel.chatProcess(event);

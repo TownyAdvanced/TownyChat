@@ -21,7 +21,7 @@ public abstract class Channel {
 	private String name;
 	private List<String> commands;
 	private channelTypes type;
-	private String channelTag, messageColour, permission, leavePermission, channelSound;
+	private String channelTag, messageColour, permission, leavePermission, channelSound, listenPermission, speakPermission;
 	private double range;
 	private boolean hooked=false;
 	private boolean autojoin=true;
@@ -237,6 +237,36 @@ public abstract class Channel {
 		leavePermission = permission;
 	}
 
+	public boolean hasListenPermission() {
+		return listenPermission != null;
+	}
+
+	/**
+	 * @return the permission node required to listen to a channel.
+	 */
+	public String getListenPermissionNode() {
+		return listenPermission;
+	}
+
+	public void setListenPermission(String permission) {
+		listenPermission = permission;
+	}
+
+	public boolean hasSpeakPermission() {
+		return speakPermission != null;
+	}
+
+	/**
+	 * @return the permission node required to speak into a channel.
+	 */
+	public String getSpeakPermissionNode() {
+		return speakPermission;
+	}
+
+	public void setSpeakPermission(String permission) {
+		speakPermission = permission;
+	}
+
 	public boolean hasMuteList() {
 		if (mutedPlayers == null || mutedPlayers.isEmpty()) return false;
 		return true;
@@ -443,5 +473,17 @@ public abstract class Channel {
 	}
 	public boolean hasPermission(Player player) {
 		return getPermission() != null && TownyUniverse.getInstance().getPermissionSource().testPermission(player, getPermission());
+	}
+
+	public boolean hasSpeakPermission(Player player) {
+		if (!hasSpeakPermission())
+			return hasPermission(player);
+		return TownyUniverse.getInstance().getPermissionSource().testPermission(player, getSpeakPermissionNode());
+	}
+
+	public boolean hasListenPermission(Player player) {
+		if (!hasListenPermission())
+			return hasPermission(player);
+		return TownyUniverse.getInstance().getPermissionSource().testPermission(player, getListenPermissionNode());
 	}
 }

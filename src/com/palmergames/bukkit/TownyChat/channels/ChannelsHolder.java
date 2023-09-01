@@ -100,7 +100,7 @@ public class ChannelsHolder {
 		String name = player.getName();
 		
 		// Return the defaultChan if it is the correct type, and the player is present in that channel.
-		if (getDefaultChannel() != null && getDefaultChannel().isPresent(name) && getDefaultChannel().getType().equals(type)) {
+		if (getDefaultChannel() != null && getDefaultChannel().isPresent(name) && getDefaultChannel().getType().equals(type) && getDefaultChannel().hasSpeakPermission(player)) {
 			if (!unlimitedRange || getDefaultChannel().getRange() < 1)
 				return getDefaultChannel();
 		}
@@ -108,7 +108,7 @@ public class ChannelsHolder {
 		for (Channel channel: channels.values()) {
 			if (!channel.isPresent(name)) continue;
 			if (!channel.getType().equals(type)) continue;
-			if (channel.hasPermission(player)) {
+			if (channel.hasSpeakPermission(player)) {
 				if (channel.getRange() == -1) {
 					global = channel;
 				} else if (channel.getRange() == 0) {
@@ -146,7 +146,7 @@ public class ChannelsHolder {
 		
 		for (Channel channel: channels.values()) {
 			if (!channel.getType().equals(type)) continue;
-			if (channel.hasPermission(player)){
+			if (channel.hasSpeakPermission(player)){
 				if (channel.getRange() == -1) {
 					global = channel;
 				} else if (channel.getRange() == 0) {
@@ -178,10 +178,12 @@ public class ChannelsHolder {
 		Set<String> perms = new HashSet<String>();
 		
 		for (Channel channel: channels.values()) {
-			if (!perms.contains(channel.getPermission())) {
+			if (!perms.contains(channel.getPermission()))
 				perms.add(channel.getPermission());
-				
-			}
+			if (channel.hasListenPermission() && !perms.contains(channel.getListenPermissionNode()))
+				perms.add(channel.getListenPermissionNode());
+			if (channel.hasSpeakPermission() && !perms.contains(channel.getSpeakPermissionNode()))
+				perms.add(channel.getSpeakPermissionNode());
 		}
 		return perms;
 	}
