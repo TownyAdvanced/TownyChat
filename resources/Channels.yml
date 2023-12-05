@@ -14,6 +14,19 @@
 
 # channeltag is applied if the chat format for that channel has the {channelTag}
 
+# permission is an optional key in a channel, when it is set the given value
+# will be the permission node required to listen/speak in the channel. It is used
+# when either spearkpermission or listenpermission is not set.
+
+# speakpermission is an optional key in a channel, when it is set the given value
+# will be the permission node required to speak in the channel.
+
+# listenpermission is an optional key in a channel, when it is set the given value
+# will be the permission node required to listen to the channel.
+
+# leavepermission is an optional key in a channel, when it is set the given value
+# will be the permission node required to listen to the channel.
+
 # messagecolour sets the colour of the message when sent.
 
 # range is a setting which allows greater control over each channel.
