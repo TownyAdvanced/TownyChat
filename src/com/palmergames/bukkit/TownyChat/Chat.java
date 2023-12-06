@@ -7,7 +7,6 @@ import com.palmergames.bukkit.TownyChat.Command.commandobjects.ChannelJoinAliasC
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import com.palmergames.bukkit.TownyChat.channels.ChannelsHolder;
 import com.palmergames.bukkit.TownyChat.config.ChatSettings;
-import com.palmergames.bukkit.TownyChat.config.ChannelConfigurationHandler;
 import com.palmergames.bukkit.TownyChat.config.ChannelsSettings;
 import com.palmergames.bukkit.TownyChat.listener.EssentialsDiscordHookListener;
 import com.palmergames.bukkit.TownyChat.listener.TownyChatPlayerListener;
@@ -51,7 +50,6 @@ public class Chat extends JavaPlugin {
 
 	private TownyChatPlayerListener TownyPlayerListener;
 	private ChannelsHolder channels;
-	private ChannelConfigurationHandler channelsConfig;
 	
 	protected PluginManager pm;
 	private static Chat chat = null;
@@ -75,7 +73,6 @@ public class Chat extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		pm = getServer().getPluginManager();
-		channelsConfig = new ChannelConfigurationHandler(this);
 		channels = new ChannelsHolder(this);
 		playerChannelMap = new ConcurrentHashMap<>();
 		
@@ -121,7 +118,7 @@ public class Chat extends JavaPlugin {
 	private void loadConfigs() {
 		FileMgmt.checkOrCreateFolders(new String[] { getRootPath(), getTownySettingsPath() });
 		chatConfigError = !ChatSettings.loadCommentedChatConfig();
-		channelsConfigError = !ChannelsSettings.loadCommentedChannelsConfig();//!channelsConfig.loadChannels();
+		channelsConfigError = !ChannelsSettings.loadCommentedChannelsConfig();
 	}
 
 	public static Chat getTownyChat() {
@@ -137,7 +134,6 @@ public class Chat extends JavaPlugin {
 		towny = null;
 		pm = null;
 		
-		channelsConfig = null;
 		channels = null;
 		playerChannelMap = null;
 	}
@@ -238,13 +234,6 @@ public class Chat extends JavaPlugin {
 		return channels;
 	}
 
-	/**
-	 * @return the data
-	 */
-	public ChannelConfigurationHandler getConfigurationHandler() {
-		return channelsConfig;
-	}
-
 	public Towny getTowny() {
 		return towny;
 	}
@@ -286,7 +275,7 @@ public class Chat extends JavaPlugin {
 			bukkitCommandMap.setAccessible(true);
 			CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
 
-			commandMap.registerAll("towny", commands);
+			commandMap.registerAll("TownyChat", commands);
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
