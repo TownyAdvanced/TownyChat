@@ -284,10 +284,20 @@ public abstract class Channel {
 		return hooked;
 	}
 	
+	/**
+	 * deprecated since 0.110, this setting has been unused for an unknown amount of time.
+	 * @param autojoin
+	 */
+	@Deprecated
 	public void setAutoJoin(boolean autojoin) {
 		this.autojoin = autojoin;
 	}
 	
+	/**
+	 * deprecated since 0.110, this setting has been unused for an unknown amount of time.
+	 * @param autojoin
+	 */
+	@Deprecated
 	public boolean isAutoJoin() {
 		return autojoin;
 	}

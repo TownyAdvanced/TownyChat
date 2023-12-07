@@ -237,7 +237,6 @@ public class ChannelsSettings {
 		channel.setCommands(data.getCommands());
 		channel.setType(channelTypes.valueOf(data.getType()));
 		channel.setRange(data.getRange());
-		channel.setAutoJoin(data.isAutoJoin());
 		channel.setHooked(data.isHooked());
 		channel.setFocusable(data.isFocusable());
 		channel.setLeavePermission(data.getLeavePermission());
@@ -374,10 +373,6 @@ public class ChannelsSettings {
 
 		public boolean isHooked() {
 			return getBoolean(channelSettingsMap.getOrDefault("hooked", false));
-		}
-
-		public boolean isAutoJoin() {
-			return getBoolean(channelSettingsMap.getOrDefault("autojoin", true));
 		}
 
 		public boolean isFocusable() {
