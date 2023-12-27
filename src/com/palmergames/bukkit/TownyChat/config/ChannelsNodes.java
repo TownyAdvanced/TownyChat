@@ -96,7 +96,7 @@ public enum ChannelsNodes {
 			"# --------------------",
 			"# Black = &0, Navy = &1, Green = &2, Blue = &3, Red = &4, Purple = &5, Gold = &6, LightGray = &7, Gray = &8, DarkPurple = &9, LightGreen = &a,",
 			"# LightBlue = &b, Rose = &c, LightPurple = &d, Yellow = &e, White = &f"),
-	CHANNELS_ROOT("channels", "", "", "");
+	CHANNELS_ROOT("Channels", "", "", "");
 
 	private final String Root;
 	private final String Default;

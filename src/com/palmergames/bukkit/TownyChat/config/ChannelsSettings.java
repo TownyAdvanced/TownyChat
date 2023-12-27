@@ -6,12 +6,12 @@ import com.palmergames.bukkit.TownyChat.channels.StandardChannel;
 import com.palmergames.bukkit.TownyChat.channels.channelTypes;
 import com.palmergames.bukkit.config.CommentedConfiguration;
 import com.palmergames.util.FileMgmt;
+import com.palmergames.util.StringMgmt;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +23,7 @@ import java.util.Set;
 
 public class ChannelsSettings {
 
+	private static final String CHANNELS_ROOT = "Channels";
 	private static CommentedConfiguration channelConfig, newChannelConfig;
 	private final static List<String> DEFAULT_CHANNELS = Arrays.asList("general","town","nation","alliance","admin","mod","local");
 	
@@ -74,35 +75,35 @@ public class ChannelsSettings {
 	}
 
 	private static Object getValue(ChannelsNodes root) {
-		String key = root.getRoot().toLowerCase(Locale.ROOT);
+		String key = root.getRoot();
 		return channelConfig.get(key) != null ? channelConfig.get(key) : root.getDefault();
 	}
 
 	private static void addComment(String root, String... comments) {
-		newChannelConfig.addComment(root.toLowerCase(), comments);
+		newChannelConfig.addComment(root, comments);
 	}
 
 	private static void setNewProperty(String root, Object value) {
 		if (value == null) {
 			value = "";
 		}
-		newChannelConfig.set(root.toLowerCase(), value.toString());
+		newChannelConfig.set(root, value.toString());
 	}
 
 	private static void tryAndSetDefaultChannels() {
 
-		if (channelConfig.contains("channels")) {
+		if (channelConfig.contains(CHANNELS_ROOT)) {
 			// There is already a root channels present, not our first run.
-			newChannelConfig.set("channels", channelConfig.get("channels"));
+			newChannelConfig.set(CHANNELS_ROOT, channelConfig.get(CHANNELS_ROOT));
 		} else {
 			// Populate a fresh channels.yml.
 			Chat.getTownyChat().getLogger().info("TownyChat creating default channels.yml file.");
 
-			newChannelConfig.createSection("channels");
+			newChannelConfig.createSection(CHANNELS_ROOT);
 			for (String channel : DEFAULT_CHANNELS)
-				newChannelConfig.createSection("channels." + channel);
+				newChannelConfig.createSection(CHANNELS_ROOT + "." + channel);
 	
-			ConfigurationSection configurationSection = newChannelConfig.getConfigurationSection("channels");
+			ConfigurationSection configurationSection = newChannelConfig.getConfigurationSection(CHANNELS_ROOT);
 			configurationSection.set("general", generalDefaults());
 			configurationSection.set("town", townDefaults());
 			configurationSection.set("nation", nationDefaults());
@@ -197,7 +198,7 @@ public class ChannelsSettings {
 	}
 
 	private static boolean loadChannels() {
-		ConfigurationSection configurationSection = channelConfig.getConfigurationSection("channels");
+		ConfigurationSection configurationSection = channelConfig.getConfigurationSection(CHANNELS_ROOT);
 		if (configurationSection == null) {
 			Bukkit.getLogger().severe("[TownyChat] Failed to load Channels.yml!");
 			Bukkit.getLogger().severe("[TownyChat] No channels root section was present!");
@@ -240,7 +241,6 @@ public class ChannelsSettings {
 		channel.setHooked(data.isHooked());
 		channel.setFocusable(data.isFocusable());
 		channel.setLeavePermission(data.getLeavePermission());
-
 		// The following may not neccessarily be set.
 		if (data.hasMessageColour())
 			channel.setMessageColour(data.getMessageColour());
@@ -274,7 +274,7 @@ public class ChannelsSettings {
 		public ChannelDetails(CommentedConfiguration channelsConfig, String name) {
 			super();
 			this.name = name.toLowerCase(Locale.ROOT);
-			String path = "channels." + this.name;
+			String path = CHANNELS_ROOT + "." + this.name;
 			for (String key : channelsConfig.getConfigurationSection(path).getKeys(true)) {
 				String innerPath = path + "." + key;
 				if (channelsConfig.get(innerPath) != null)
@@ -283,6 +283,8 @@ public class ChannelsSettings {
 		}
 
 		private Object parseObject(Object object) {
+			if (object instanceof @SuppressWarnings("rawtypes") List list)
+				return StringMgmt.join(list, ",");
 			if (object instanceof String string)
 				return string;
 			if (object instanceof Boolean b)
@@ -383,13 +385,11 @@ public class ChannelsSettings {
 			return getBoolean(channelSettingsMap.getOrDefault("default", false));
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public List<String> getCommands() {
 			Object object = channelSettingsMap.get("commands");
-			if (object instanceof String string)
+			if (object instanceof String string) {
 				return Arrays.asList(string.split(","));
-			if (object instanceof ArrayList list)
-				return list;
+			}
 			// As a fall-back we make a command from the channel name, this should not
 			// happen often or at all.
 			return Collections.singletonList(name + "chat");
