@@ -476,3 +476,6 @@ v0.110:
     - When these are set on a channel they will make the permission key of the channel redundant and unused.
     - Closes https://github.com/TownyAdvanced/Towny/issues/1020.
   - Update min. Towny version to 0.100.0.0.
+  - Add CommentedConfiguration support to the channels.yml.
+    - The Comments in the file have been updated to include missing channel flags.
+    - It is now possible to update the file comments as new flags are added.
