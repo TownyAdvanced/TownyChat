@@ -37,7 +37,7 @@ public class ChannelsSettings {
 		if (FileMgmt.checkOrCreateFile(filepath)) {
 			File file = new File(filepath);
 
-			// read the config.yml into memory
+			// read the channels.yml into memory
 			channelConfig = new CommentedConfiguration(file.toPath());
 			if (!channelConfig.load()) {
 				Bukkit.getLogger().severe("[TownyChat] Failed to load Channels.yml!");
@@ -91,7 +91,6 @@ public class ChannelsSettings {
 	}
 
 	private static void tryAndSetDefaultChannels() {
-
 		if (channelConfig.contains(CHANNELS_ROOT)) {
 			// There is already a root channels present, not our first run.
 			newChannelConfig.set(CHANNELS_ROOT, channelConfig.get(CHANNELS_ROOT));
@@ -100,18 +99,21 @@ public class ChannelsSettings {
 			Chat.getTownyChat().getLogger().info("TownyChat creating default channels.yml file.");
 
 			newChannelConfig.createSection(CHANNELS_ROOT);
-			for (String channel : DEFAULT_CHANNELS)
-				newChannelConfig.createSection(CHANNELS_ROOT + "." + channel);
-	
-			ConfigurationSection configurationSection = newChannelConfig.getConfigurationSection(CHANNELS_ROOT);
-			configurationSection.set("general", generalDefaults());
-			configurationSection.set("town", townDefaults());
-			configurationSection.set("nation", nationDefaults());
-			configurationSection.set("alliance", allianceDefaults());
-			configurationSection.set("admin", adminDefaults());
-			configurationSection.set("mod", modDefaults());
-			configurationSection.set("local", localDefaults());
+			DEFAULT_CHANNELS.forEach(channel -> newChannelConfig.createSection(CHANNELS_ROOT + "." + channel));
+
+			setConfigSection("general", generalDefaults());
+			setConfigSection("town", townDefaults());
+			setConfigSection("nation", nationDefaults());
+			setConfigSection("alliance", allianceDefaults());
+			setConfigSection("admin", adminDefaults());
+			setConfigSection("mod", modDefaults());
+			setConfigSection("local", localDefaults());
 		}
+	}
+
+	private static void setConfigSection(String section, Map<String,Object> settings) {
+		ConfigurationSection configurationSection = newChannelConfig.getConfigurationSection(CHANNELS_ROOT + "." + section);
+		settings.entrySet().stream().forEach(entry -> configurationSection.set(entry.getKey(), entry.getValue()));
 	}
 
 	private static Map<String, Object> generalDefaults() {

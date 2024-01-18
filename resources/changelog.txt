@@ -479,3 +479,6 @@ v0.110:
   - Add CommentedConfiguration support to the channels.yml.
     - The Comments in the file have been updated to include missing channel flags.
     - It is now possible to update the file comments as new flags are added.
+v0.111:
+  - Fix creation of channels.yml, opting to make channels into proper ConfigurationSections rather than Maps which aren't easily read on their first creation and then subsequent load.
+  - It is no longer recommended to delete your channels.yml when updating from TownyChat 0.109 or earlier.
