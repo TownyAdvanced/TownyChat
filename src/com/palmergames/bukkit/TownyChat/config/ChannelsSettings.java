@@ -218,7 +218,7 @@ public class ChannelsSettings {
 		Chat plugin = Chat.getTownyChat();
 
 		channelsKeys.forEach((channelName)-> {
-			Channel channel = new StandardChannel(plugin, channelName);//.toLowerCase(Locale.ROOT));
+			Channel channel = new StandardChannel(plugin, channelName);
 			loadChannelSettings(channelName, channel);
 			plugin.getChannelsHandler().addChannel(channel);
 		});
@@ -273,7 +273,7 @@ public class ChannelsSettings {
 		 */
 		public ChannelDetails(CommentedConfiguration channelsConfig, String name) {
 			super();
-			this.name = name;//.toLowerCase(Locale.ROOT);
+			this.name = name;
 			String path = CHANNELS_ROOT + "." + this.name;
 			for (String key : channelsConfig.getConfigurationSection(path).getKeys(true)) {
 				String innerPath = path + "." + key;
