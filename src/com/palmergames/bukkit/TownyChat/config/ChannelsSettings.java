@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -194,7 +193,6 @@ public class ChannelsSettings {
 		channelMap.put("channelTag", "&f[local]");
 		channelMap.put("messagecolour", "&f");
 		channelMap.put("permission", "towny.chat.local");
-		channelMap.put("default", "true");
 		channelMap.put("range", "100");
 		return channelMap;
 	}
@@ -220,7 +218,7 @@ public class ChannelsSettings {
 		Chat plugin = Chat.getTownyChat();
 
 		channelsKeys.forEach((channelName)-> {
-			Channel channel = new StandardChannel(plugin, channelName.toLowerCase(Locale.ROOT));
+			Channel channel = new StandardChannel(plugin, channelName);//.toLowerCase(Locale.ROOT));
 			loadChannelSettings(channelName, channel);
 			plugin.getChannelsHandler().addChannel(channel);
 		});
@@ -275,7 +273,7 @@ public class ChannelsSettings {
 		 */
 		public ChannelDetails(CommentedConfiguration channelsConfig, String name) {
 			super();
-			this.name = name.toLowerCase(Locale.ROOT);
+			this.name = name;//.toLowerCase(Locale.ROOT);
 			String path = CHANNELS_ROOT + "." + this.name;
 			for (String key : channelsConfig.getConfigurationSection(path).getKeys(true)) {
 				String innerPath = path + "." + key;
