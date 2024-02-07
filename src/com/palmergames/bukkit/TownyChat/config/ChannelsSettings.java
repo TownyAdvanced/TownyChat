@@ -25,6 +25,21 @@ public class ChannelsSettings {
 	private static final String CHANNELS_ROOT = "Channels";
 	private static CommentedConfiguration channelConfig, newChannelConfig;
 	private final static List<String> DEFAULT_CHANNELS = Arrays.asList("general","town","nation","alliance","admin","mod","local");
+
+	private static final String CHANNEL_TAG = "channelTag";
+	private static final String SPAM_TIME = "spam_time";
+	private static final String RANGE = "range";
+	private static final String DEFAULT = "default";
+	private static final String PERMISSION = "permission";
+	private static final String MESSAGECOLOUR = "messagecolour";
+	private static final String TYPE = "type";
+	private static final String COMMANDS = "commands";
+	private static final String FOCUSABLE = "focusable";
+	private static final String HOOKED = "hooked";
+	private static final String SOUND = "sound";
+	private static final String SPEAKPERMISSION = "speakpermission";
+	private static final String LISTENPERMISSION = "listenpermission";
+	private static final String LEAVEPERMISSION = "leavepermission";
 	
 	/**
 	 * 
@@ -117,83 +132,83 @@ public class ChannelsSettings {
 
 	private static Map<String, Object> generalDefaults() {
 		Map<String, Object> channelMap = new LinkedHashMap<>();
-		channelMap.put("commands", "g");
-		channelMap.put("type", "GLOBAL");
-		channelMap.put("channelTag", "&f[g]");
-		channelMap.put("messagecolour", "&f");
-		channelMap.put("permission", "towny.chat.general");
-		channelMap.put("default", "true");
-		channelMap.put("range", "-1");
-		channelMap.put("spam_time", "0.5");
+		channelMap.put(COMMANDS, "g");
+		channelMap.put(TYPE, "GLOBAL");
+		channelMap.put(CHANNEL_TAG, "&f[g]");
+		channelMap.put(MESSAGECOLOUR, "&f");
+		channelMap.put(PERMISSION, "towny.chat.general");
+		channelMap.put(DEFAULT, "true");
+		channelMap.put(RANGE, "-1");
+		channelMap.put(SPAM_TIME, "0.5");
 		return channelMap;
 	}
 
 	private static Map<String, Object> townDefaults() {
 		Map<String, Object> channelMap = new LinkedHashMap<>();
-		channelMap.put("commands", "tc");
-		channelMap.put("type", "TOWN");
-		channelMap.put("channelTag", "&f[&3TC&f]");
-		channelMap.put("messagecolour", "&b");
-		channelMap.put("permission", "towny.chat.town");
-		channelMap.put("range", "-1");
-		channelMap.put("spam_time", "0.5");
+		channelMap.put(COMMANDS, "tc");
+		channelMap.put(TYPE, "TOWN");
+		channelMap.put(CHANNEL_TAG, "&f[&3TC&f]");
+		channelMap.put(MESSAGECOLOUR, "&b");
+		channelMap.put(PERMISSION, "towny.chat.town");
+		channelMap.put(RANGE, "-1");
+		channelMap.put(SPAM_TIME, "0.5");
 		return channelMap;
 	}
 
 	private static Map<String, Object> nationDefaults() {
 		Map<String, Object> channelMap = new LinkedHashMap<>();
-		channelMap.put("commands", "nc");
-		channelMap.put("type", "NATION");
-		channelMap.put("channelTag", "&f[&6NC&f]");
-		channelMap.put("messagecolour", "&e");
-		channelMap.put("permission", "towny.chat.nation");
-		channelMap.put("range", "-1");
-		channelMap.put("spam_time", "0.5");
+		channelMap.put(COMMANDS, "nc");
+		channelMap.put(TYPE, "NATION");
+		channelMap.put(CHANNEL_TAG, "&f[&6NC&f]");
+		channelMap.put(MESSAGECOLOUR, "&e");
+		channelMap.put(PERMISSION, "towny.chat.nation");
+		channelMap.put(RANGE, "-1");
+		channelMap.put(SPAM_TIME, "0.5");
 		return channelMap;
 	}
 
 	private static Map<String, Object> allianceDefaults() {
 		Map<String, Object> channelMap = new LinkedHashMap<>();
-		channelMap.put("commands", "ac");
-		channelMap.put("type", "ALLIANCE");
-		channelMap.put("channelTag", "&f[&2AC&f]");
-		channelMap.put("messagecolour", "&a");
-		channelMap.put("permission", "towny.chat.alliance");
-		channelMap.put("range", "-1");
-		channelMap.put("spam_time", "0.5");
+		channelMap.put(COMMANDS, "ac");
+		channelMap.put(TYPE, "ALLIANCE");
+		channelMap.put(CHANNEL_TAG, "&f[&2AC&f]");
+		channelMap.put(MESSAGECOLOUR, "&a");
+		channelMap.put(PERMISSION, "towny.chat.alliance");
+		channelMap.put(RANGE, "-1");
+		channelMap.put(SPAM_TIME, "0.5");
 		return channelMap;
 	}
 
 	private static Map<String, Object> adminDefaults() {
 		Map<String, Object> channelMap = new LinkedHashMap<>();
-		channelMap.put("commands", "a,admin");
-		channelMap.put("type", "DEFAULT");
-		channelMap.put("channelTag", "&f[&4ADMIN&f]");
-		channelMap.put("messagecolour", "&c");
-		channelMap.put("permission", "towny.chat.admin");
-		channelMap.put("range", "-1");
+		channelMap.put(COMMANDS, "a,admin");
+		channelMap.put(TYPE, "DEFAULT");
+		channelMap.put(CHANNEL_TAG, "&f[&4ADMIN&f]");
+		channelMap.put(MESSAGECOLOUR, "&c");
+		channelMap.put(PERMISSION, "towny.chat.admin");
+		channelMap.put(RANGE, "-1");
 		return channelMap;
 	}
 
 	private static Map<String, Object> modDefaults() {
 		Map<String, Object> channelMap = new LinkedHashMap<>();
-		channelMap.put("commands", "m,mod");
-		channelMap.put("type", "DEFAULT");
-		channelMap.put("channelTag", "&f[&9MOD&f]");
-		channelMap.put("messagecolour", "&5");
-		channelMap.put("permission", "towny.chat.mod");
-		channelMap.put("range", "-1");
+		channelMap.put(COMMANDS, "m,mod");
+		channelMap.put(TYPE, "DEFAULT");
+		channelMap.put(CHANNEL_TAG, "&f[&9MOD&f]");
+		channelMap.put(MESSAGECOLOUR, "&5");
+		channelMap.put(PERMISSION, "towny.chat.mod");
+		channelMap.put(RANGE, "-1");
 		return channelMap;
 	}
 
 	private static Map<String, Object> localDefaults() {
 		Map<String, Object> channelMap = new LinkedHashMap<>();
-		channelMap.put("commands", "l,lc");
-		channelMap.put("type", "GLOBAL");
-		channelMap.put("channelTag", "&f[local]");
-		channelMap.put("messagecolour", "&f");
-		channelMap.put("permission", "towny.chat.local");
-		channelMap.put("range", "100");
+		channelMap.put(COMMANDS, "l,lc");
+		channelMap.put(TYPE, "GLOBAL");
+		channelMap.put(CHANNEL_TAG, "&f[local]");
+		channelMap.put(MESSAGECOLOUR, "&f");
+		channelMap.put(PERMISSION, "towny.chat.local");
+		channelMap.put(RANGE, "100");
 		return channelMap;
 	}
 
@@ -302,91 +317,91 @@ public class ChannelsSettings {
 		}
 
 		public String getType() {
-			return (String) channelSettingsMap.getOrDefault("type", "DEFAULT");
+			return (String) channelSettingsMap.getOrDefault(TYPE, "DEFAULT");
 		}
 
 		public boolean hasChannelTag() {
-			return channelSettingsMap.containsKey("channeltag");
+			return channelSettingsMap.containsKey(CHANNEL_TAG);
 		}
 
 		public String getChannelTag() {
-			return (String) channelSettingsMap.getOrDefault("channeltag", "");
+			return (String) channelSettingsMap.getOrDefault(CHANNEL_TAG, "");
 		}
 
 		public boolean hasMessageColour() {
-			return channelSettingsMap.containsKey("messagecolour");
+			return channelSettingsMap.containsKey(MESSAGECOLOUR);
 		}
 
 		public String getMessageColour() {
-			return (String) channelSettingsMap.getOrDefault("messagecolour", "");
+			return (String) channelSettingsMap.getOrDefault(MESSAGECOLOUR, "");
 		}
 
 		public boolean hasPermission() {
-			return channelSettingsMap.containsKey("permission");
+			return channelSettingsMap.containsKey(PERMISSION);
 		}
 
 		public String getPermission() {
-			return (String) channelSettingsMap.getOrDefault("permission", "");
+			return (String) channelSettingsMap.getOrDefault(PERMISSION, "");
 		}
 
 		public boolean hasLeavePermission() {
-			return channelSettingsMap.containsKey("leavepermission");
+			return channelSettingsMap.containsKey(LEAVEPERMISSION);
 		}
 
 		public String getLeavePermission() {
-			return (String) channelSettingsMap.getOrDefault("leavepermission", "towny.chat.leave." + name);
+			return (String) channelSettingsMap.getOrDefault(LEAVEPERMISSION, "towny.chat.leave." + name);
 		}
 
 		public boolean hasListenPermission() {
-			return channelSettingsMap.containsKey("listenpermission");
+			return channelSettingsMap.containsKey(LISTENPERMISSION);
 		}
 
 		public String getListenPermission() {
-			return (String) channelSettingsMap.getOrDefault("listenpermission", "");
+			return (String) channelSettingsMap.getOrDefault(LISTENPERMISSION, "");
 		}
 
 		public boolean hasSpeakPermission() {
-			return channelSettingsMap.containsKey("speakpermission");
+			return channelSettingsMap.containsKey(SPEAKPERMISSION);
 		}
 
 		public String getSpeakPermission() {
-			return (String) channelSettingsMap.getOrDefault("speakpermission", "");
+			return (String) channelSettingsMap.getOrDefault(SPEAKPERMISSION, "");
 		}
 
 		public boolean hasSound() {
-			return channelSettingsMap.containsKey("sound");
+			return channelSettingsMap.containsKey(SOUND);
 		}
 
 		public String getSound() {
-			return (String) channelSettingsMap.getOrDefault("sound", "");
+			return (String) channelSettingsMap.getOrDefault(SOUND, "");
 		}
 
 		public boolean hasSpamTime() {
-			return channelSettingsMap.containsKey("spam_time");
+			return channelSettingsMap.containsKey(SPAM_TIME);
 		}
 
 		public double getSpamTime() {
-			return Double.valueOf((String) channelSettingsMap.get("spam_time"));
+			return Double.valueOf((String) channelSettingsMap.get(SPAM_TIME));
 		}
 
 		public double getRange() {
-			return Double.valueOf((String) channelSettingsMap.getOrDefault("range", -1));
+			return Double.valueOf((String) channelSettingsMap.getOrDefault(RANGE, -1));
 		}
 
 		public boolean isHooked() {
-			return getBoolean(channelSettingsMap.getOrDefault("hooked", false));
+			return getBoolean(channelSettingsMap.getOrDefault(HOOKED, false));
 		}
 
 		public boolean isFocusable() {
-			return getBoolean(channelSettingsMap.getOrDefault("focusable", true));
+			return getBoolean(channelSettingsMap.getOrDefault(FOCUSABLE, true));
 		}
 
 		public boolean isDefault() {
-			return getBoolean(channelSettingsMap.getOrDefault("default", false));
+			return getBoolean(channelSettingsMap.getOrDefault(DEFAULT, false));
 		}
 
 		public List<String> getCommands() {
-			Object object = channelSettingsMap.get("commands");
+			Object object = channelSettingsMap.get(COMMANDS);
 			if (object instanceof String string) {
 				return Arrays.asList(string.split(","));
 			}

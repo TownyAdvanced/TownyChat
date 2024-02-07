@@ -482,3 +482,8 @@ v0.110:
 v0.111:
   - Fix creation of channels.yml, opting to make channels into proper ConfigurationSections rather than Maps which aren't easily read on their first creation and then subsequent load.
   - It is no longer recommended to delete your channels.yml when updating from TownyChat 0.109 or earlier.
+v0.112:
+  - Fix local channel having default: true, enable upper-case channel names.
+v0.113:
+  - Fix channelTag not parsing properly.
+    - Closes https://github.com/TownyAdvanced/Towny/issues/7239.
