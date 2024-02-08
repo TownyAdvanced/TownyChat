@@ -26,7 +26,7 @@ public class ChannelsSettings {
 	private static CommentedConfiguration channelConfig, newChannelConfig;
 	private final static List<String> DEFAULT_CHANNELS = Arrays.asList("general","town","nation","alliance","admin","mod","local");
 
-	private static final String CHANNEL_TAG = "channelTag";
+	private static final String CHANNEL_TAG = "channeltag";
 	private static final String SPAM_TIME = "spam_time";
 	private static final String RANGE = "range";
 	private static final String DEFAULT = "default";
