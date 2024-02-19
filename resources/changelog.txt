@@ -489,3 +489,5 @@ v0.113:
     - Closes https://github.com/TownyAdvanced/Towny/issues/7239.
 v0.114:
   - Actually fix {channelTag} not parsing properly.
+v0.115:
+  - Add support for channels.yml's with legacy channelTag keys.

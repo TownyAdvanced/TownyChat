@@ -27,6 +27,7 @@ public class ChannelsSettings {
 	private final static List<String> DEFAULT_CHANNELS = Arrays.asList("general","town","nation","alliance","admin","mod","local");
 
 	private static final String CHANNEL_TAG = "channeltag";
+	private static final String LEGACY_CHANNEL_TAG = "channelTag";
 	private static final String SPAM_TIME = "spam_time";
 	private static final String RANGE = "range";
 	private static final String DEFAULT = "default";
@@ -321,11 +322,12 @@ public class ChannelsSettings {
 		}
 
 		public boolean hasChannelTag() {
-			return channelSettingsMap.containsKey(CHANNEL_TAG);
+			return channelSettingsMap.containsKey(CHANNEL_TAG) || channelSettingsMap.containsKey(LEGACY_CHANNEL_TAG);
 		}
 
 		public String getChannelTag() {
-			return (String) channelSettingsMap.getOrDefault(CHANNEL_TAG, "");
+			String slug = channelSettingsMap.containsKey(LEGACY_CHANNEL_TAG) ? LEGACY_CHANNEL_TAG : CHANNEL_TAG;
+			return (String) channelSettingsMap.getOrDefault(slug, "");
 		}
 
 		public boolean hasMessageColour() {
