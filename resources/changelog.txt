@@ -493,3 +493,4 @@ v0.115:
   - Add support for channels.yml's with legacy channelTag keys.
 v0.116:
   - Bump min Towny version to 0.100.3.0.
+  - Handle the rare occasion that we aren't able to alter the recipients.

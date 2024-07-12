@@ -91,8 +91,13 @@ public class StandardChannel extends Channel {
 		/*
 		 *  Set recipients for Bukkit to send this message to.
 		 */
-		event.getRecipients().clear();
-		event.getRecipients().addAll(recipients);
+		try {
+			event.getRecipients().clear();
+			event.getRecipients().addAll(recipients);
+
+			// The below exception is thrown on the the rare occurence that an immutable Set
+			// is passed to us in the AsyncPlayerChatEvent.
+		} catch (UnsupportedOperationException ignored) {}
 
 		// If the server has marked this Channel as hooked, fire the AsyncChatHookEvent.
 		// If the event is cancelled, cancel the chat entirely.
