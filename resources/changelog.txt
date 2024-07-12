@@ -494,3 +494,10 @@ v0.115:
 v0.116:
   - Bump min Towny version to 0.100.3.0.
   - Handle the rare occasion that we aren't able to alter the recipients.
+  - Add new setting to channels: ignoreable.
+    - This settings defaults to true when it is not set on a channel in your channels.yml.
+    - New channels.yml files will have their admin and mod channels containing ignoreable: false.
+    - When a channel has ignoreable: false, players will not be able to ignore the channel.
+    - Ignoring channels is achieved by using /res toggle ignoreotherchannels. When this mode is used you will only see the channel you are present in.
+    - ie: if you are in town chat, with ignoreotherchannels active, you will not see the general, nation or local chats.
+    - Closes https://github.com/TownyAdvanced/Towny/issues/6441.

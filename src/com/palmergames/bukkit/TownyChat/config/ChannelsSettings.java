@@ -36,6 +36,7 @@ public class ChannelsSettings {
 	private static final String TYPE = "type";
 	private static final String COMMANDS = "commands";
 	private static final String FOCUSABLE = "focusable";
+	private static final String IGNOREABLE = "ignoreable";
 	private static final String HOOKED = "hooked";
 	private static final String SOUND = "sound";
 	private static final String SPEAKPERMISSION = "speakpermission";
@@ -188,6 +189,7 @@ public class ChannelsSettings {
 		channelMap.put(MESSAGECOLOUR, "&c");
 		channelMap.put(PERMISSION, "towny.chat.admin");
 		channelMap.put(RANGE, "-1");
+		channelMap.put(IGNOREABLE, "false");
 		return channelMap;
 	}
 
@@ -199,6 +201,7 @@ public class ChannelsSettings {
 		channelMap.put(MESSAGECOLOUR, "&5");
 		channelMap.put(PERMISSION, "towny.chat.mod");
 		channelMap.put(RANGE, "-1");
+		channelMap.put(IGNOREABLE, "false");
 		return channelMap;
 	}
 
@@ -256,6 +259,7 @@ public class ChannelsSettings {
 		channel.setRange(data.getRange());
 		channel.setHooked(data.isHooked());
 		channel.setFocusable(data.isFocusable());
+		channel.setIgnoreable(data.isIgnoreable());
 		channel.setLeavePermission(data.getLeavePermission());
 		// The following may not neccessarily be set.
 		if (data.hasMessageColour())
@@ -396,6 +400,10 @@ public class ChannelsSettings {
 
 		public boolean isFocusable() {
 			return getBoolean(channelSettingsMap.getOrDefault(FOCUSABLE, true));
+		}
+
+		public boolean isIgnoreable() {
+			return getBoolean(channelSettingsMap.getOrDefault(IGNOREABLE, true));
 		}
 
 		public boolean isDefault() {

@@ -160,7 +160,13 @@ public class StandardChannel extends Channel {
 				.filter(p -> testDistance(sender, p, getRange())) // Within range.
 				.filter(p -> !plugin.isIgnoredByEssentials(sender, p)) // Check essentials ignore.
 				.filter(p -> !isAbsent(p.getName())) // Check if player is purposefully absent.
+				.filter(p -> !isFocusedToAnotherChannel(p)) // Check if the player is listening to a single channel.
 				.collect(Collectors.toSet());
+	}
+
+	private boolean isFocusedToAnotherChannel(Player p) {
+		Resident resident = TownyAPI.getInstance().getResident(p);
+		return this.isIgnoreable() && resident != null && resident.hasMode("ignoreotherchannels") && !plugin.getPlayerChannel(p).equals(this);
 	}
 
 	private void refreshPlayer(Channel channel, Player player) {

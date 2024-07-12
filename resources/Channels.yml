@@ -42,6 +42,13 @@
 # so there is no point to adding focusable: true. You make a channel un-focusable
 # by adding focusable: false.
 
+# ignoreable is a setting which determines if a player can ignore the channel by
+# using /res toggle ignoreotherchannels. By default a channel will have ignoreable
+# set to true. You can add ignoreable: false to a channel in order to make it 
+# something that players cannot ignore, and will see the channel chat from this 
+# channel even when that player has other channels ignored. This is useful for 
+# staff chat channels which should always be monitored.
+
 # Text colouring
 # --------------
 # Black = &0, Navy = &1, Green = &2, Blue = &3, Red = &4
@@ -99,6 +106,7 @@ Channels:
         messagecolour: '&c'
         permission: 'towny.chat.admin'
         range: '-1'
+        ignoreable: false
         
     mod:
         commands: [m,mod]
@@ -107,6 +115,7 @@ Channels:
         messagecolour: '&5'
         permission: 'towny.chat.mod'
         range: '-1'
+        ignoreable: false
         
     local:
         commands: [l,lc]
