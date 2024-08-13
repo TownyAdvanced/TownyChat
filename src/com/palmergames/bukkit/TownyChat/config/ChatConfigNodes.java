@@ -76,10 +76,8 @@ public enum ChatConfigNodes {
 			"#",
 			"# Hex Chat Coloring",
 			"# -----------------",
-			"# Valid formats: ",
-			"# #RRGGBB", 
-			"# &#RRGGBB", 
-			"# {#RRGGBB}"),
+			"# Valid format: ", 
+			"# <#RRGGBB>"),
 			
 	CHANNEL_FORMATS(
 			"channel_formats",
