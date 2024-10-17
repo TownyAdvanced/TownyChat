@@ -63,9 +63,39 @@ public class TownyChatPlayerListener implements Listener  {
 	private void refreshPlayerChannels(Player player) {
 		plugin.getChannelsHandler().getAllChannels().values().stream().forEach(channel -> channel.forgetPlayer(player));
 	}
-	
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onLowestPlayerChat(AsyncPlayerChatEvent event) {
+		if (ChatSettings.getChatListenerPriority().equalsIgnoreCase("lowest"))
+			handleChatEvent(event);
+	}
+
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public void onLowPlayerChat(AsyncPlayerChatEvent event) {
+		if (ChatSettings.getChatListenerPriority().equalsIgnoreCase("low"))
+			handleChatEvent(event);
+	}
+
 	@EventHandler(ignoreCancelled = true)
-	public void onPlayerChat(AsyncPlayerChatEvent event) {
+	public void onNormalPlayerChat(AsyncPlayerChatEvent event) {
+		if (ChatSettings.getChatListenerPriority().equalsIgnoreCase("normal"))
+			handleChatEvent(event);
+	}
+
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onHighPlayerChat(AsyncPlayerChatEvent event) {
+		if (ChatSettings.getChatListenerPriority().equalsIgnoreCase("high"))
+			handleChatEvent(event);
+	}
+
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onHighestPlayerChat(AsyncPlayerChatEvent event) {
+		if (ChatSettings.getChatListenerPriority().equalsIgnoreCase("highest"))
+			handleChatEvent(event);
+	}
+
+	private void handleChatEvent(AsyncPlayerChatEvent event) {
 		Player player = event.getPlayer();
 
 		// Check if the message contains colour codes we need to remove or parse.

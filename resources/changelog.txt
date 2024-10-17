@@ -501,3 +501,14 @@ v0.116:
     - Ignoring channels is achieved by using /res toggle ignoreotherchannels. When this mode is used you will only see the channel you are present in.
     - ie: if you are in town chat, with ignoreotherchannels active, you will not see the general, nation or local chats.
     - Closes https://github.com/TownyAdvanced/Towny/issues/6441.
+0.117:
+  - Bump min Towny version to 0.100.3.0.
+  - Add the ability to choose which EventPriority TownyChat uses to modify chat.
+    - Closes https://github.com/TownyAdvanced/Towny/issues/7625.
+  - New ChatConfig.yml Option: modify_chat.listener_priority
+    - Default: normal
+    - The priority used for the AsyncPlayerChatEvent listener in TownyChat. This option will decide when TownyChat listens to the Chat event thrown by Bukkit-based servers.
+    - Valid settings are: lowest, low, normal, high, highest
+    - Lowest is the earliest listener, allowing TownyChat to act upon chat before Low, Normal, High, and Highest priority plugins.
+    - Highest will cause TownyChat to change chat after other plugins operating on lower priorities.
+    - If you don't know what any of this means leave it at normal.

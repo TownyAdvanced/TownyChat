@@ -142,6 +142,15 @@ public enum ChatConfigNodes {
 			"modify_chat",
 			"",
 			""),
+	MODIFY_CHAT_LISTENER_PRIORITY(
+			"modify_chat.listener_priority",
+			"normal",
+			"",
+			"# The priority used for the AsyncPlayerChatEvent listener in TownyChat. This option will decide when TownyChat listens to the Chat event thrown by Bukkit-based servers.",
+			"# Valid settings are: lowest, low, normal, high, highest",
+			"# Lowest is the earliest listener, allowing TownyChat to act upon chat before Low, Normal, High, and Highest priority plugins.",
+			"# Highest will cause TownyChat to change chat after other plugins operating on lower priorities.",
+			"# If you don't know what any of this means leave it at normal."),
     MODIFY_CHAT_ENABLE(
     		"modify_chat.enable",
     		"true",

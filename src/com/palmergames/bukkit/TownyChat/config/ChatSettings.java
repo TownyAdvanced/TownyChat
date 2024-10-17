@@ -184,6 +184,14 @@ public class ChatSettings {
 		return getBoolean(ChatConfigNodes.ALLOW_EXCLAMATION_POINT_SHOUTS);
 	}
 
+	public static String getChatListenerPriority() {
+		String priority = getString(ChatConfigNodes.MODIFY_CHAT_LISTENER_PRIORITY).toLowerCase(Locale.ROOT);
+		return switch(priority) {
+		case "lowest","low","normal","high","highest"-> priority;
+		default -> "normal";
+		};
+	}
+
 	/*
 	 * Get Tags formats.
 	 */
