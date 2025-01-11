@@ -155,6 +155,13 @@ public class TownyChatPlayerListener implements Listener  {
 		 * We found no channels available so modify the chat (if enabled) and exit.
 		 */
 		if (ChatSettings.isModify_chat()) {
+			Channel channel = plugin.getChannelsHandler().getDefaultChannel();
+			if (channel.hasSpeakPermission() && !channel.hasSpeakPermission(player)) {
+				event.setCancelled(true);
+				TownyMessaging.sendMessage(player, ChatSettings.getUsingAloneMessageString());
+				return;
+			}
+			
 			Resident resident = TownyAPI.getInstance().getResident(player);
 			if (resident == null)
 				return;
