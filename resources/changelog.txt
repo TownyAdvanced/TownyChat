@@ -512,3 +512,5 @@ v0.116:
     - Lowest is the earliest listener, allowing TownyChat to act upon chat before Low, Normal, High, and Highest priority plugins.
     - Highest will cause TownyChat to change chat after other plugins operating on lower priorities.
     - If you don't know what any of this means leave it at normal.
+0.118: 
+  - Fix speak and listen channel nodes not working.
