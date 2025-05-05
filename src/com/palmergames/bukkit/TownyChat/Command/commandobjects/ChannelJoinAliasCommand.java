@@ -28,68 +28,68 @@ public class ChannelJoinAliasCommand extends BukkitCommand {
 
 	@Override
 	public boolean execute(CommandSender commandSender, String label, String[] args) {
-		if (commandSender instanceof Player) { // So a player has ran some /g command or something
-			if (channel.getCommands().contains(this.getName())) { // Should in theory always be true.
-				final Player player = (Player) commandSender;
-				String message = "";
-				if (args.length > 0) {
-					message = StringMgmt.join(args, " ");
-				}
-				if (message.isEmpty()) {
-					Channel chan = plugin.getPlayerChannel(player); 
-					if (chan != null && chan.getName().equalsIgnoreCase(channel.getName())) {
-						TownyMessaging.sendMessage(player, Translatable.of("tc_you_are_already_in_channel", channel.getName()));
-						return true;
-					} else {
-						// You can join a channel if:
-						// - Towny doesn't recognize your permissions plugin
-						// - channel has no permission set [by default they don't] OR
-						//   - channel has permission set AND:
-						//     - player has channel permission
-						// - the Channel is designated as being joinable (which they are by default.)
-						if (!channel.hasSpeakPermission(player) || !channel.isFocusable()) {
-							TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_you_cannot_join_channel", channel.getName()));
-							return true;
-						}
-						
-						plugin.setPlayerChannel(player, channel);
-						TownyMessaging.sendMessage(player, Translatable.of("tc_you_are_now_talking_in_channel", Colors.translateColorCodes(channel.getMessageColour()) + channel.getName()));
-						Bukkit.getPluginManager().callEvent(new PlayerJoinChatChannelEvent(player, channel));
-						return true;
-					}
-				} else {
-					if (channel.isMuted(player.getName())) {
-						TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_you_are_currently_muted_in_channel", channel.getName()));
-						return true;
-					}
-					// You can speak in a channel if:
-					// - Towny doesn't recognize your permissions plugin
-					// - channel has no permission set [by default they don't] OR
-					//   - channel has permission set AND:
-					//     - player has channel permission
-					if (!channel.hasSpeakPermission(player)) {
-						TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_you_cannot_join_channel", channel.getName()));
-						return true;
-					}
-
-					plugin.getTownyPlayerListener().directedChat.put(player, channel.getName().toLowerCase());
-
-					final String msg = message;
-
-					// https://www.spigotmc.org/threads/plugins-triggering-commands-async.31815/
-					TaskScheduler scheduler = plugin.getScheduler();
-					if (!scheduler.isEntityThread(player)) {
-						scheduler.run(player, () -> player.chat(msg));
-					} else {
-						player.chat(msg);
-					}
-					return true;
-				}
-			}
+		if (!channel.getCommands().contains(this.getName()))
 			return true;
-		} else {
+
+		if (!(commandSender instanceof Player player)) {
 			TownyMessaging.sendMsg("You may not use this command as the console!");
 			return false;
 		}
+
+		// So a player has ran some /g command or something
+		String message = args.length > 0 ? StringMgmt.join(args, " ") : "";
+
+		if (message.isEmpty()) {
+			// There was no message, just a channel command, they are trying to switch channels.
+			Channel chan = plugin.getPlayerChannel(player); 
+			if (chan != null && chan.getName().equalsIgnoreCase(channel.getName())) {
+				// They're already in that channel.
+				TownyMessaging.sendMessage(player, Translatable.of("tc_you_are_already_in_channel", channel.getName()));
+				return true;
+			}
+			// You can join a channel if:
+			// - Towny doesn't recognize your permissions plugin
+			// - channel has no permission set [by default they don't] OR
+			//   - channel has permission set AND:
+			//     - player has channel permission
+			// - the Channel is designated as being joinable (which they are by default.)
+			if (!channel.hasSpeakPermission(player) || !channel.isFocusable()) {
+				TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_you_cannot_join_channel", channel.getName()));
+				return true;
+			}
+
+			plugin.setPlayerChannel(player, channel);
+			TownyMessaging.sendMessage(player, Translatable.of("tc_you_are_now_talking_in_channel", Colors.translateColorCodes(channel.getMessageColour()) + channel.getName()));
+			Bukkit.getPluginManager().callEvent(new PlayerJoinChatChannelEvent(player, channel));
+			return true;
+		}
+
+		// The player is sending a message into a channel using /g somemessage
+		if (channel.isMuted(player.getName())) {
+			TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_you_are_currently_muted_in_channel", channel.getName()));
+			return true;
+		}
+		// You can speak in a channel if:
+		// - Towny doesn't recognize your permissions plugin
+		// - channel has no permission set [by default they don't] OR
+		//   - channel has permission set AND:
+		//     - player has channel permission
+		if (!channel.hasSpeakPermission(player)) {
+			TownyMessaging.sendErrorMsg(player, Translatable.of("tc_err_you_cannot_join_channel", channel.getName()));
+			return true;
+		}
+
+		plugin.getTownyPlayerListener().directedChat.put(player, channel.getName().toLowerCase());
+
+		final String msg = message;
+
+		// https://www.spigotmc.org/threads/plugins-triggering-commands-async.31815/
+		TaskScheduler scheduler = plugin.getScheduler();
+		if (!scheduler.isEntityThread(player)) {
+			scheduler.run(player, () -> player.chat(msg));
+		} else {
+			player.chat(msg);
+		}
+		return true;
 	}
 }
