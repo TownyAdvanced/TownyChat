@@ -514,3 +514,5 @@ v0.116:
     - If you don't know what any of this means leave it at normal.
 0.118: 
   - Fix speak and listen channel nodes not working.
+0.119:
+  - Fix regression in 0.118 and channel permissions.

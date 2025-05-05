@@ -497,13 +497,13 @@ public abstract class Channel {
 
 	public boolean hasSpeakPermission(Player player) {
 		if (!hasSpeakPermission())
-			return true;
+			return hasPermission(player);
 		return TownyUniverse.getInstance().getPermissionSource().testPermission(player, getSpeakPermissionNode());
 	}
 
 	public boolean hasListenPermission(Player player) {
 		if (!hasListenPermission())
-			return true;
+			return hasPermission(player);
 		return TownyUniverse.getInstance().getPermissionSource().testPermission(player, getListenPermissionNode());
 	}
 }
