@@ -146,6 +146,7 @@
             <groupId>net.essentialsx</groupId>
             <artifactId>EssentialsXDiscord</artifactId>
             <version>${essentialsx.version}</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>net.dv8tion</groupId>
