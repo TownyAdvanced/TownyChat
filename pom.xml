@@ -80,28 +80,6 @@
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
             <version>1.19.4-R0.1-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.yaml</groupId>
-                    <artifactId>snakeyaml</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.kyori</groupId>
-                    <artifactId>adventure-text-serializer-gson</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-resolver-provider</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.md-5</groupId>
-                    <artifactId>bungeecord-chat</artifactId>
-                </exclusion>
-            </exclusions>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -109,20 +87,6 @@
             <artifactId>EssentialsX</artifactId>
             <version>${essentialsx.version}</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bstats</groupId>
-                    <artifactId>bstats-bukkit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.kyori</groupId>
-                    <artifactId>adventure-text-serializer-gson</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>us.dynmap</groupId>
@@ -149,20 +113,8 @@
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>net.dv8tion</groupId>
-                    <artifactId>JDA</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>com.github.MinnDevelopment</groupId>
                     <artifactId>emoji-java</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>club.minnced</groupId>
-                    <artifactId>discord-webhooks</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
