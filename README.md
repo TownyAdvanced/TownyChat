@@ -175,8 +175,6 @@ ___
 
 ### Building TownyChat
 If you would like to build TownyChat yourself, you can do so with [Apache Maven](https://maven.apache.org/).
-Depending on the age of the branch, you may wish to instead look at [Apache Ant](https://ant.apache.org).
-Building with Ant is outside of this brief tutorial's scope.
 
 #### Steps
 > Steps 2 &ndash; 4 can be managed by an IDE, such as IntelliJ Idea or Eclipse.<br>
