@@ -58,7 +58,7 @@ public class Chat extends JavaPlugin {
 	private DynmapAPI dynMap = null;
 	private Essentials essentials = null;
 	
-	private static String requiredTownyVersion = "0.100.4.0";
+	private static String requiredTownyVersion = "0.101.2.5";
 	public static boolean usingPlaceholderAPI = false;
 	public static boolean usingEssentialsDiscord = false;
 	boolean chatConfigError = false;
@@ -81,7 +81,7 @@ public class Chat extends JavaPlugin {
 			disableWithMessage("Towny version does not meet required minimum version: " + requiredTownyVersion.toString());
 			return;
 		} else {
-			getLogger().info("Towny version " + towny.getDescription().getVersion() + " found.");
+			getLogger().info("Towny version " + towny.getPluginMeta().getVersion() + " found.");
 		}
 		
 		loadConfigs();

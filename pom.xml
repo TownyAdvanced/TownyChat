@@ -7,7 +7,7 @@
     <groupId>com.palmergames.bukkit</groupId>
     <artifactId>TownyChat</artifactId>
     <packaging>jar</packaging>
-    <version>0.119</version>
+    <version>0.120</version>
 
     <licenses>
         <license>
@@ -26,7 +26,7 @@
         <java.version>17</java.version>
         <project.bukkitAPIVersion>1.16</project.bukkitAPIVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <towny.version>0.100.4.0</towny.version>
+        <towny.version>0.101.2.5</towny.version>
     </properties>
 
     <!-- For use with GitHub Package Registry -->
@@ -45,10 +45,6 @@
     </scm>
 
     <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
@@ -77,16 +73,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.21.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+<!--        <dependency>
             <groupId>com.palmergames.bukkit.towny</groupId>
             <artifactId>towny</artifactId>
             <version>${towny.version}</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.20.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
+            <groupId>com.github.TownyAdvanced.Towny</groupId>
+            <artifactId>towny</artifactId>
+            <version>master-4907b3123a-1</version>
         </dependency>
         <dependency>
             <groupId>net.essentialsx</groupId>

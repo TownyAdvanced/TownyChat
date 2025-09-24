@@ -54,7 +54,7 @@ public class ChatSettings {
 	 */
 	private static void setDefaults(File file) {
 
-		String version = Chat.getTownyChat().getDescription().getVersion();
+		String version = Chat.getTownyChat().getPluginMeta().getVersion();
 		newChatConfig = new CommentedConfiguration(file.toPath());
 		newChatConfig.load();
 

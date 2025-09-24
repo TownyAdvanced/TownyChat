@@ -516,3 +516,6 @@ v0.116:
   - Fix speak and listen channel nodes not working.
 0.119:
   - Fix regression in 0.118 and channel permissions.
+0.120:
+  - Update to support Towny's adoption of Paper over Spigot.
+  - Bump min. Towny version to 0.101.2.5.
