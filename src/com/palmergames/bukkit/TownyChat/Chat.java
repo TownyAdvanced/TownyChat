@@ -39,11 +39,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Chat plugin to manage all Towny chat
- * 
- * Website: http://code.google.com/a/eclipselabs.org/p/towny/
- * 
+ * Reference Chat Plugin for Towny
+ *
+ * @link <a href="https://townyadvanced.github.io">TownyAdvanced</a>
+ * @link <a href="https://github.com/TownyAdvanced/TownyChat">Source Code (GitHub)</a>
+ * @link <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/">License (CC BY-NC-ND 3.0)</a>
  * @author ElgarL
+ * @author LlmDl
  */
 
 public class Chat extends JavaPlugin {
@@ -58,7 +60,7 @@ public class Chat extends JavaPlugin {
 	private DynmapAPI dynMap = null;
 	private Essentials essentials = null;
 	
-	private static String requiredTownyVersion = "0.100.4.0";
+	private static final String requiredTownyVersion = "0.102.0.0";
 	public static boolean usingPlaceholderAPI = false;
 	public static boolean usingEssentialsDiscord = false;
 	boolean chatConfigError = false;
