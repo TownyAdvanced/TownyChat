@@ -516,3 +516,9 @@ v0.116:
   - Fix speak and listen channel nodes not working.
 0.119:
   - Fix regression in 0.118 and channel permissions.
+0.120:
+  - Port to Paper for Towny 0.102.0.0, courtesy of TheFlagCourier with PR #62.
+    - Bump min Towny version to 0.102.0.0.
+    - Drop Jabel and Java 8 support.
+    - Updates a bunch of dependencies.
+    - Adds README and License markdown files.

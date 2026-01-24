@@ -7,7 +7,7 @@
     <groupId>com.palmergames.bukkit</groupId>
     <artifactId>TownyChat</artifactId>
     <packaging>jar</packaging>
-    <version>0.120-SNAPSHOT</version>
+    <version>0.120</version>
 
     <licenses>
         <license>
