@@ -90,7 +90,7 @@ ___
 > Prior versions of TownyChat may continue to function, but are unsupported if not used as advertised.
 
 * **[Current Development](https://github.com/TownyAdvanced/TownyChat) \[Future 0.120\]**
-  * Supports Towny 0.101.2.1+ (Pre-Release)
+  * Supports Towny 0.102.0.0+
 
 * **[Current Release](https://github.com/TownyAdvanced/TownyChat/releases/0.119) \[0.119\]**
   * Supports Towny 0.100.4.0 &ndash; 0.101.2.0 (Release)
