@@ -8,6 +8,7 @@ import com.palmergames.bukkit.TownyChat.events.PlayerJoinChatChannelEvent;
 import com.palmergames.bukkit.TownyChat.listener.LocalTownyChatEvent;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyMessaging;
+import com.palmergames.bukkit.towny.TownySettings;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -55,6 +56,13 @@ public class StandardChannel extends Channel {
 		// If the channel would require a town/nation which is null, cancel and fail early.
 		if (town == null && channelType.equals(channelTypes.TOWN) ||
 			nation == null && (channelType.equals(channelTypes.NATION) || channelType.equals(channelTypes.ALLIANCE))) {
+			event.setCancelled(true);
+			return;
+		}
+
+		// If the town is conquered and Towny doesn't count those conquered towns as allies, cancel nation and alliance chatting.
+		if (!TownySettings.areConqueredTownsConsideredAllied() && town != null && town.isConquered() &&
+			(channelType.equals(channelTypes.NATION) || channelType.equals(channelTypes.ALLIANCE))) {
 			event.setCancelled(true);
 			return;
 		}
@@ -138,11 +146,33 @@ public class StandardChannel extends Channel {
 	private Set<Player> getRecipients(Player player, Town town, Nation nation, channelTypes channelType, Set<Player> recipients) {
 		return switch (channelType) {
 		case TOWN -> new HashSet<>(findRecipients(player, TownyAPI.getInstance().getOnlinePlayers(town)));
-		case NATION -> new HashSet<>(findRecipients(player, TownyAPI.getInstance().getOnlinePlayers(nation)));
-		case ALLIANCE -> new HashSet<>(findRecipients(player, TownyAPI.getInstance().getOnlinePlayersAlliance(nation)));
+		case NATION -> new HashSet<>(findRecipients(player, getValidNationMembers(nation)));
+		case ALLIANCE -> new HashSet<>(findRecipients(player, getValidNationAllianceMembers(nation)));
 		case DEFAULT -> new HashSet<>(findRecipients(player, new ArrayList<>(recipients)));
 		case GLOBAL, PRIVATE -> new HashSet<>(findRecipients(player, new ArrayList<>(recipients)));
 		};
+	}
+
+	private List<Player> getValidNationMembers(Nation nation) {
+		List<Player> players = new ArrayList<>();
+		if (TownySettings.areConqueredTownsConsideredAllied())
+			players.addAll(TownyAPI.getInstance().getOnlinePlayers(nation));
+		else {
+			for (Town town : nation.getTowns()) {
+				if (town.isConquered())
+					continue;
+				players.addAll(TownyAPI.getInstance().getOnlinePlayers(town));
+			}
+		}
+		return players;
+	}
+
+	private List<Player> getValidNationAllianceMembers(Nation nation) {
+		List<Player> players = getValidNationMembers(nation);
+		for (Nation ally : nation.getAllies())
+			players.addAll(getValidNationMembers(ally));
+
+		return players;
 	}
 
 	/**

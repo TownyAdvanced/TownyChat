@@ -522,3 +522,5 @@ v0.116:
     - Drop Jabel and Java 8 support.
     - Updates a bunch of dependencies.
     - Adds README and License markdown files.
+0.121:
+  - Add support for Towny's areConqueredTownsConsideredAllied feature, allowing for conquered towns to not use or see the nation and alliance chats belonging to their conquering nation.
