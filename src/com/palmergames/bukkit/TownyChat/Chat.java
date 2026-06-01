@@ -12,6 +12,7 @@ import com.palmergames.bukkit.TownyChat.listener.EssentialsDiscordHookListener;
 import com.palmergames.bukkit.TownyChat.listener.TownyChatPlayerListener;
 import com.palmergames.bukkit.TownyChat.tasks.onLoadedTask;
 import com.palmergames.bukkit.TownyChat.util.EssentialsIntegration;
+import com.palmergames.bukkit.TownyChat.util.PAPIPlaceholderExpansion;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.scheduling.TaskScheduler;
 import com.palmergames.bukkit.towny.scheduling.impl.BukkitTaskScheduler;
@@ -153,6 +154,7 @@ public class Chat extends JavaPlugin {
 	 */
 	private void checkPlugins() {
 		Plugin test;
+		PAPIPlaceholderExpansion papiexpansion;
 
 		test = pm.getPlugin("Towny");
 		if (test != null && test instanceof Towny)
@@ -166,6 +168,8 @@ public class Chat extends JavaPlugin {
 		test = pm.getPlugin("PlaceholderAPI");
 		if (test != null) {
 		    usingPlaceholderAPI = true;
+		    papiexpansion = new PAPIPlaceholderExpansion(this);
+		    papiexpansion.register();
 		}
 
 		test = pm.getPlugin("EssentialsDiscord");
