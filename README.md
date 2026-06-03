@@ -136,6 +136,20 @@ add-on plugins, [SponsorPlugins](https://github.com/LlmDl/SponsorPlugins#readme)
 
 ___
 
+### PAPI Placeholder Support
+
+TownyChat's chatconfig.yml's `channel_format` lines support the use of PAPI placeholders from other plugins.
+
+Additionally, TownyChat supplies PAPI with a few placeholders of its own, in case you use another chat plugin for chat formatting and TownyChat for its channels.
+
+The available placeholders are:
+- `%townychat_current_channel%`: Shows the name of the channel the player is currently using.
+- `%townychat_current_channel_name%`: Shows the name of the channel the player is currently using.
+- `%townychat_current_channel_tag%`: Shows the tag of the channel the player is currently using.
+- `%townychat_current_channel_message_colour%`: Shows the message colour of the channel the player is currently using.
+
+___
+
 ### Contributing
 If you'd like to contribute to the Towny code, see the [CONTRIBUTING.md](https://github.com/LlmDl/Towny/blob/master/.github/CONTRIBUTING.MD) over on Towny.
 

@@ -12,6 +12,7 @@ import com.palmergames.bukkit.TownyChat.listener.EssentialsDiscordHookListener;
 import com.palmergames.bukkit.TownyChat.listener.TownyChatPlayerListener;
 import com.palmergames.bukkit.TownyChat.tasks.onLoadedTask;
 import com.palmergames.bukkit.TownyChat.util.EssentialsIntegration;
+import com.palmergames.bukkit.TownyChat.util.PAPIPlaceholderExpansion;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.scheduling.TaskScheduler;
 import com.palmergames.bukkit.towny.scheduling.impl.BukkitTaskScheduler;
@@ -59,8 +60,9 @@ public class Chat extends JavaPlugin {
 	private Towny towny = null;
 	private DynmapAPI dynMap = null;
 	private Essentials essentials = null;
+	private PAPIPlaceholderExpansion papiexpansion;
 	
-	private static final String requiredTownyVersion = "0.102.0.0";
+	private static final String requiredTownyVersion = "0.103.0.0";
 	public static boolean usingPlaceholderAPI = false;
 	public static boolean usingEssentialsDiscord = false;
 	boolean chatConfigError = false;
@@ -83,7 +85,7 @@ public class Chat extends JavaPlugin {
 			disableWithMessage("Towny version does not meet required minimum version: " + requiredTownyVersion.toString());
 			return;
 		} else {
-			getLogger().info("Towny version " + towny.getDescription().getVersion() + " found.");
+			getLogger().info("Towny version " + towny.getPluginMeta().getVersion() + " found.");
 		}
 		
 		loadConfigs();
@@ -165,7 +167,11 @@ public class Chat extends JavaPlugin {
 		
 		test = pm.getPlugin("PlaceholderAPI");
 		if (test != null) {
+			if (papiexpansion != null)
+				papiexpansion.unregister();
 		    usingPlaceholderAPI = true;
+		    papiexpansion = new PAPIPlaceholderExpansion(this);
+		    papiexpansion.register();
 		}
 
 		test = pm.getPlugin("EssentialsDiscord");
