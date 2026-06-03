@@ -62,7 +62,7 @@ public class Chat extends JavaPlugin {
 	private Essentials essentials = null;
 	private PAPIPlaceholderExpansion papiexpansion;
 	
-	private static final String requiredTownyVersion = "0.102.0.0";
+	private static final String requiredTownyVersion = "0.103.0.0";
 	public static boolean usingPlaceholderAPI = false;
 	public static boolean usingEssentialsDiscord = false;
 	boolean chatConfigError = false;
