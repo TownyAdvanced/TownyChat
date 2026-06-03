@@ -15,12 +15,14 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 
 public class ChannelJoinAliasCommand extends BukkitCommand {
-	public Channel channel;
+	// In the past the Channel itself was stored but this caused issues with
+	// /townychat reload not showing new formats to online players.
+	public String channelName;
 	public Chat plugin;
 
 	public ChannelJoinAliasCommand(String name, Channel channel, Chat plugin) {
 		super(name);
-		this.channel = channel;
+		this.channelName = channel.getName();
 		this.plugin = plugin;
 		this.description = name + " - Channel command join alias for " + channel.getName();
 		this.usageMessage = "/" + name;
@@ -28,7 +30,9 @@ public class ChannelJoinAliasCommand extends BukkitCommand {
 
 	@Override
 	public boolean execute(CommandSender commandSender, String label, String[] args) {
-		if (!channel.getCommands().contains(this.getName()))
+		// Lookup a fresh instance of the channel in question.
+		Channel channel = plugin.getChannelsHandler().getChannel(channelName);
+		if (channel == null || !channel.getCommands().contains(this.getName()))
 			return true;
 
 		if (!(commandSender instanceof Player player)) {

@@ -60,6 +60,7 @@ public class Chat extends JavaPlugin {
 	private Towny towny = null;
 	private DynmapAPI dynMap = null;
 	private Essentials essentials = null;
+	private PAPIPlaceholderExpansion papiexpansion;
 	
 	private static final String requiredTownyVersion = "0.102.0.0";
 	public static boolean usingPlaceholderAPI = false;
@@ -84,7 +85,7 @@ public class Chat extends JavaPlugin {
 			disableWithMessage("Towny version does not meet required minimum version: " + requiredTownyVersion.toString());
 			return;
 		} else {
-			getLogger().info("Towny version " + towny.getDescription().getVersion() + " found.");
+			getLogger().info("Towny version " + towny.getPluginMeta().getVersion() + " found.");
 		}
 		
 		loadConfigs();
@@ -154,7 +155,6 @@ public class Chat extends JavaPlugin {
 	 */
 	private void checkPlugins() {
 		Plugin test;
-		PAPIPlaceholderExpansion papiexpansion;
 
 		test = pm.getPlugin("Towny");
 		if (test != null && test instanceof Towny)
@@ -167,6 +167,8 @@ public class Chat extends JavaPlugin {
 		
 		test = pm.getPlugin("PlaceholderAPI");
 		if (test != null) {
+			if (papiexpansion != null)
+				papiexpansion.unregister();
 		    usingPlaceholderAPI = true;
 		    papiexpansion = new PAPIPlaceholderExpansion(this);
 		    papiexpansion.register();

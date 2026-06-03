@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import com.palmergames.bukkit.TownyChat.Chat;
 import com.palmergames.bukkit.TownyChat.channels.Channel;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.md_5.bungee.api.ChatColor;
 
 public class PAPIPlaceholderExpansion extends PlaceholderExpansion {
 
@@ -43,7 +42,7 @@ public class PAPIPlaceholderExpansion extends PlaceholderExpansion {
 
 	@Override
 	public String onRequest(OfflinePlayer player, String identifier) {
-		return ChatColor.translateAlternateColorCodes('&', getOfflinePlayerPlaceholder(player, identifier));
+		return getOfflinePlayerPlaceholder(player, identifier);
 	}
 
 	private String getOfflinePlayerPlaceholder(OfflinePlayer offlinePlayer, String identifier) {
